@@ -1,0 +1,58 @@
+# Intel Quartus Prime Settings File — tiny-gpu HaDes-V
+# Target device: Intel Cyclone V GX (change DEVICE for Arria 10 / Agilex 7)
+#
+# To synthesize:
+#   quartus_sh -t build.tcl
+#
+# For Agilex 7 (AI Tiles, HBM, target 250 MHz):
+#   Change FAMILY to "Agilex 7" and DEVICE to the appropriate Agilex part number.
+# For Arria 10 (~$100 dev board, target 200 MHz):
+#   Change FAMILY to "Arria 10" and DEVICE to 10AX115S2F45I1SG.
+
+set_global_assignment -name FAMILY "Cyclone V"
+set_global_assignment -name DEVICE 5CGXFC7C7F23C8N
+set_global_assignment -name TOP_LEVEL_ENTITY gpu
+set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
+set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
+set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
+set_global_assignment -name ERROR_CHECK_FREQUENCY_DIVISOR 256
+
+# ---- SystemVerilog source files ----
+set_global_assignment -name SYSTEMVERILOG_FILE ../src/gpu.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../src/core.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../src/decoder.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../src/alu.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../src/registers.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../src/pc.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../src/scheduler.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../src/rob.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../src/fetcher.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../src/lsu.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../src/controller.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../src/dispatch.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../src/dcr.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../src/texture_unit.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../src/rasterizer.sv
+set_global_assignment -name SYSTEMVERILOG_FILE ../src/framebuffer_if.sv
+
+# ---- Timing constraints ----
+set_global_assignment -name SDC_FILE gpu.sdc
+
+# ---- Synthesis optimisation ----
+set_global_assignment -name OPTIMIZATION_MODE "Aggressive Performance"
+set_global_assignment -name ALLOW_REGISTER_RETIMING ON
+set_global_assignment -name AUTO_SHIFT_REGISTER_RECOGNITION ON
+set_global_assignment -name DSP_BLOCK_BALANCING "Auto"
+set_global_assignment -name REMOVE_REDUNDANT_LOGIC_CELLS ON
+set_global_assignment -name AUTO_PACKED_REGISTERS_STRATIX "Auto"
+
+# ---- Pin assignments (DE0-CV / DE1-SoC Cyclone V example) ----
+# Adjust for your specific board; these are illustrative only.
+set_location_assignment PIN_M9   -to clk
+set_location_assignment PIN_AB12 -to reset
+set_location_assignment PIN_AA14 -to start
+set_location_assignment PIN_AF10 -to done
+
+# ---- Agilex / Stratix 10 AI Tile hints (uncomment for Pro edition) ----
+# set_global_assignment -name AI_TENSOR_ACCEL_ENABLE ON
+# set_global_assignment -name HBM_ENABLE ON
