@@ -1,21 +1,22 @@
 `default_nettype none
 `timescale 1ns/1ns
 
-// GPU
+// GPU (Phase 1: 32-bit data and 32-bit RV32I instructions)
 // > Built to use an external async memory with multi-channel read/write
 // > Assumes that the program is loaded into program memory, data into data memory, and threads into
 //   the device control register before the start signal is triggered
 // > Has memory controllers to interface between external memory and its multiple cores
 // > Configurable number of cores and thread capacity per core
 module gpu #(
-    parameter DATA_MEM_ADDR_BITS = 8,        // Number of bits in data memory address (256 rows)
-    parameter DATA_MEM_DATA_BITS = 8,        // Number of bits in data memory value (8 bit data)
-    parameter DATA_MEM_NUM_CHANNELS = 4,     // Number of concurrent channels for sending requests to data memory
-    parameter PROGRAM_MEM_ADDR_BITS = 8,     // Number of bits in program memory address (256 rows)
-    parameter PROGRAM_MEM_DATA_BITS = 16,    // Number of bits in program memory value (16 bit instruction)
-    parameter PROGRAM_MEM_NUM_CHANNELS = 1,  // Number of concurrent channels for sending requests to program memory
-    parameter NUM_CORES = 2,                 // Number of cores to include in this GPU
-    parameter THREADS_PER_BLOCK = 4          // Number of threads to handle per block (determines the compute resources of each core)
+    parameter DATA_MEM_ADDR_BITS = 8,        // 256 word-addressed data rows
+    parameter DATA_MEM_DATA_BITS = 32,       // 32-bit data words (Phase 1, up from 8)
+    parameter DATA_MEM_NUM_CHANNELS = 4,     // Concurrent data memory channels
+    parameter PROGRAM_MEM_ADDR_BITS = 8,     // 256 word-addressed instruction rows
+    parameter PROGRAM_MEM_DATA_BITS = 32,    // 32-bit RV32I instructions (Phase 1, up from 16)
+    parameter PROGRAM_MEM_NUM_CHANNELS = 1,  // Concurrent program memory channels
+    parameter NUM_CORES = 2,                 // Number of compute cores
+    parameter THREADS_PER_BLOCK = 4,         // Threads per block (SIMD width)
+    parameter ROB_DEPTH = 16                 // Phase 4: ROB entries per core
 ) (
     input wire clk,
     input wire reset,
@@ -190,6 +191,7 @@ module gpu #(
                 .PROGRAM_MEM_ADDR_BITS(PROGRAM_MEM_ADDR_BITS),
                 .PROGRAM_MEM_DATA_BITS(PROGRAM_MEM_DATA_BITS),
                 .THREADS_PER_BLOCK(THREADS_PER_BLOCK),
+                .ROB_DEPTH(ROB_DEPTH),
             ) core_instance (
                 .clk(clk),
                 .reset(core_reset[i]),

@@ -1,69 +1,77 @@
 `default_nettype none
 `timescale 1ns/1ns
 
-// PROGRAM COUNTER
-// > Calculates the next PC for each thread to update to (but currently we assume all threads
-//   update to the same PC and don't support branch divergence)
-// > Currently, each thread in each core has it's own calculation for next PC
-// > The NZP register value is set by the CMP instruction (based on >/=/< comparison) to 
-//   initiate the BRnzp instruction for branching
+// PROGRAM COUNTER (RV32I branch / jump semantics — Phase 1)
+// Supports:
+//   PC+4   (next sequential instruction)
+//   BRANCH (conditional: PC + B-imm when branch_taken)
+//   JAL    (unconditional: PC + J-imm, computed by ALU)
+//   JALR   (register-indirect: (rs1 + I-imm) & ~1, computed by ALU)
+//
+// NOTE: the program memory uses word-addressed PCs (each address = one 32-bit
+// instruction), so "PC+4" in byte-space maps to "PC+1" here.  alu_out that
+// comes from JAL/JALR carries a word-offset target as well (imm already
+// divided by 4 in the assembler / compiler, or kept as word offset by
+// convention in this implementation).
 module pc #(
-    parameter DATA_MEM_DATA_BITS = 8,
     parameter PROGRAM_MEM_ADDR_BITS = 8
 ) (
     input wire clk,
     input wire reset,
-    input wire enable, // If current block has less threads then block size, some PCs will be inactive
+    input wire enable,
 
-    // State
     input reg [2:0] core_state,
 
-    // Control Signals
-    input reg [2:0] decoded_nzp,
-    input reg [DATA_MEM_DATA_BITS-1:0] decoded_immediate,
-    input reg decoded_nzp_write_enable,
-    input reg decoded_pc_mux, 
+    // Decoded PC source selector
+    input reg [1:0] decoded_pc_src,
 
-    // ALU Output - used for alu_out[2:0] to compare with NZP register
-    input reg [DATA_MEM_DATA_BITS-1:0] alu_out,
+    // Branch outcome from ALU
+    input reg        branch_taken,
 
-    // Current & Next PCs
+    // ALU result carries branch / jump target address (word-addressed)
+    input reg [31:0] alu_out,
+
+    // Current PC (word-addressed)
     input reg [PROGRAM_MEM_ADDR_BITS-1:0] current_pc,
-    output reg [PROGRAM_MEM_ADDR_BITS-1:0] next_pc
+
+    output reg [PROGRAM_MEM_ADDR_BITS-1:0] next_pc,
+    output reg [31:0] pc_plus4   // PC+4 (word-addressed +1) for link register
 );
-    reg [2:0] nzp;
+    localparam PC_SRC_NEXT   = 2'd0;
+    localparam PC_SRC_BRANCH = 2'd1;
+    localparam PC_SRC_JAL    = 2'd2;
+    localparam PC_SRC_JALR   = 2'd3;
 
     always @(posedge clk) begin
         if (reset) begin
-            nzp <= 3'b0;
-            next_pc <= 0;
-        end else if (enable) begin
-            // Update PC when core_state = EXECUTE
-            if (core_state == 3'b101) begin 
-                if (decoded_pc_mux == 1) begin 
-                    if (((nzp & decoded_nzp) != 3'b0)) begin 
-                        // On BRnzp instruction, branch to immediate if NZP case matches previous CMP
-                        next_pc <= decoded_immediate;
-                    end else begin 
-                        // Otherwise, just update to PC + 1 (next line)
-                        next_pc <= current_pc + 1;
-                    end
-                end else begin 
-                    // By default update to PC + 1 (next line)
+            next_pc  <= {PROGRAM_MEM_ADDR_BITS{1'b0}};
+            pc_plus4 <= 32'b0;
+        end else if (enable && core_state == 3'b101) begin // EXECUTE state
+            // Link value: word-addressed PC + 1 (= byte PC + 4)
+            pc_plus4 <= {{(32-PROGRAM_MEM_ADDR_BITS){1'b0}}, current_pc} + 32'd1;
+
+            case (decoded_pc_src)
+                PC_SRC_NEXT: begin
                     next_pc <= current_pc + 1;
                 end
-            end   
-
-            // Store NZP when core_state = UPDATE   
-            if (core_state == 3'b110) begin 
-                // Write to NZP register on CMP instruction
-                if (decoded_nzp_write_enable) begin
-                    nzp[2] <= alu_out[2];
-                    nzp[1] <= alu_out[1];
-                    nzp[0] <= alu_out[0];
+                PC_SRC_BRANCH: begin
+                    // alu_out holds branch target (PC + B-imm, word-addressed)
+                    next_pc <= branch_taken
+                             ? alu_out[PROGRAM_MEM_ADDR_BITS-1:0]
+                             : current_pc + 1;
                 end
-            end      
+                PC_SRC_JAL: begin
+                    // alu_out = PC + J-imm (word-addressed)
+                    next_pc <= alu_out[PROGRAM_MEM_ADDR_BITS-1:0];
+                end
+                PC_SRC_JALR: begin
+                    // alu_out = rs1 + I-imm; clear bit 0 per RV32I spec
+                    next_pc <= {alu_out[PROGRAM_MEM_ADDR_BITS-1:1], 1'b0};
+                end
+                default: begin
+                    next_pc <= current_pc + 1;
+                end
+            endcase
         end
     end
-
 endmodule
