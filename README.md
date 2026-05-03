@@ -1,8 +1,8 @@
 # tiny-gpu
 
-A minimal GPU implementation in Verilog optimized for learning about how GPUs work from the ground up.
+A RISC-V-based GPU implementation in Verilog optimized for learning GPU architecture from the ground up — from scalar cores to vector SIMD, cache hierarchies, and graphics rasterization.
 
-Built with <15 files of fully documented Verilog, complete documentation on architecture & ISA, working matrix addition/multiplication kernels, and full support for kernel simulation & execution traces.
+Built with ~20 files of fully documented Verilog spanning 7 development phases: RV32IM scalar core, INT4/FP32 ML extensions, sparsity-aware execution, out-of-order ROB, L1 cache, graphics pipeline, and 128-bit vector SIMD. Includes working matrix addition/multiplication/vector kernels with full simulation and execution traces.
 
 ### Table of Contents
 
@@ -12,14 +12,22 @@ Built with <15 files of fully documented Verilog, complete documentation on arch
   - [Memory](#memory)
   - [Core](#core)
 - [ISA](#isa)
+  - [Base RV32IM](#base-rv32im)
+  - [Custom Extensions](#custom-extensions)
+  - [Register File](#register-file)
 - [Execution](#execution)
-  - [Core](#core-1)
+  - [Pipeline Stages](#pipeline-stages)
+  - [Out-of-Order Execution](#out-of-order-execution-phase-4)
+  - [Sparsity Skip](#sparsity-skip-phase-3)
   - [Thread](#thread)
 - [Kernels](#kernels)
-  - [Matrix Addition](#matrix-addition)
-  - [Matrix Multiplication](/tree/master?tab=readme-ov-file#matrix-multiplication)
+  - [Matrix Addition](#matrix-addition-rv32i)
+  - [Matrix Multiplication](#matrix-multiplication-rv32im)
+  - [Vector DP4A](#vector-dp4a-phase-7--custom2)
 - [Simulation](#simulation)
-- [Advanced Functionality](#advanced-functionality)
+- [Optimizations](#optimizations)
+  - [Implemented](#implemented-optimizations)
+  - [Future](#future-optimizations)
 - [Next Steps](#next-steps)
 
 # Overview
@@ -40,17 +48,26 @@ This is why I built `tiny-gpu`!
 
 > [!IMPORTANT]
 >
-> **tiny-gpu** is a minimal GPU implementation optimized for learning about how GPUs work from the ground up.
+> **tiny-gpu** is a RISC-V-based GPU implementation optimized for learning about how GPUs work from the ground up — from scalar cores to vector SIMD, cache hierarchies, and graphics rasterization.
 >
 > Specifically, with the trend toward general-purpose GPUs (GPGPUs) and ML-accelerators like Google's TPU, tiny-gpu focuses on highlighting the general principles of all of these architectures, rather than on the details of graphics-specific hardware.
 
-With this motivation in mind, we can simplify GPUs by cutting out the majority of complexity involved with building a production-grade graphics card, and focus on the core elements that are critical to all of these modern hardware accelerators.
+Built with ~20 files of fully documented Verilog spanning 7 development phases:
+
+- **Phase 1**: RV32IM scalar core (RISC-V base ISA)
+- **Phase 2**: INT4/FP32 custom extensions for ML inference
+- **Phase 3**: Sparsity-aware execution (zero-skip for power saving)
+- **Phase 4**: Out-of-order execution with Tomasulo-style ROB
+- **Phase 5**: Per-thread L1 data cache (2-way set-associative)
+- **Phase 6**: Graphics pipeline (rasterizer + texture unit + framebuffer)
+- **Phase 7**: 128-bit vector extensions (INT8/INT4 SIMD, FP32 stubs)
 
 This project is primarily focused on exploring:
 
 1. **Architecture** - What does the architecture of a GPU look like? What are the most important elements?
-2. **Parallelization** - How is the SIMD progamming model implemented in hardware?
+2. **Parallelization** - How is the SIMD programming model implemented in hardware?
 3. **Memory** - How does a GPU work around the constraints of limited memory bandwidth?
+4. **ML Acceleration** - How do vector units and INT4/INT8 quantization enable efficient inference?
 
 After understanding the fundamentals laid out in this project, you can checkout the [advanced functionality section](#advanced-functionality) to understand some of the most important optimizations made in production grade GPUs (that are more challenging to implement) which improve performance.
 
@@ -67,8 +84,8 @@ tiny-gpu is built to execute a single kernel at a time.
 
 In order to launch a kernel, we need to do the following:
 
-1. Load global program memory with the kernel code
-2. Load data memory with the necessary data
+1. Load global program memory with the kernel code (32-bit RV32IM instructions)
+2. Load data memory with the necessary data (32-bit words, or 128-bit with VECTOR_ENABLE=1)
 3. Specify the number of threads to launch in the device control register
 4. Launch the kernel by setting the start signal to high.
 
@@ -76,9 +93,19 @@ The GPU itself consists of the following units:
 
 1. Device control register
 2. Dispatcher
-3. Variable number of compute cores
+3. Variable number of compute cores (each with ROB, L1 cache, vector units)
 4. Memory controllers for data memory & program memory
-5. Cache
+5. L1 data cache (per-thread, 2-way set-associative)
+
+### GPU Parameters
+
+| Parameter | Default | Description |
+|-----------|---------|-------------|
+| `NUM_CORES` | 2 | Number of compute cores |
+| `THREADS_PER_BLOCK` | 4 | SIMD width per core |
+| `ROB_DEPTH` | 16 | Reorder buffer entries per core |
+| `L1_SETS` | 16 | L1 cache sets per thread |
+| `VECTOR_ENABLE` | 1 | 128-bit data bus (0 = 32-bit legacy) |
 
 ### Device Control Register
 
@@ -102,13 +129,14 @@ The GPU is built to interface with an external global memory. Here, data memory 
 
 tiny-gpu data memory has the following specifications:
 
-- 8 bit addressability (256 total rows of data memory)
-- 8 bit data (stores values of <256 for each row)
+- 8 bit addressability (256 word-addressable rows of data memory)
+- 32 bit scalar data (stores 32-bit values for each row)
+- 128 bit vector data when `VECTOR_ENABLE=1` (stores four 32-bit lanes or sixteen 8-bit lanes)
 
 tiny-gpu program memory has the following specifications:
 
-- 8 bit addressability (256 rows of program memory)
-- 16 bit data (each instruction is 16 bits as specified by the ISA)
+- 8 bit addressability (256 word-addressable rows of program memory)
+- 32 bit instructions (each instruction is a 32-bit RV32IM word as specified by the ISA)
 
 ### Memory Controllers
 
@@ -118,275 +146,476 @@ The memory controllers keep track of all the outgoing requests to memory from th
 
 Each memory controller has a fixed number of channels based on the bandwidth of global memory.
 
-### Cache (WIP)
+### L1 Data Cache
 
-The same data is often requested from global memory by multiple cores. Constantly access global memory repeatedly is expensive, and since the data has already been fetched once, it would be more efficient to store it on device in SRAM to be retrieved much quicker on later requests.
+The same data is often requested from global memory by multiple cores. Constantly accessing global memory is expensive, and since the data has already been fetched once, it would be more efficient to store it on device in SRAM to be retrieved much quicker on later requests.
 
-This is exactly what the cache is used for. Data retrieved from external memory is stored in cache and can be retrieved from there on later requests, freeing up memory bandwidth to be used for new data.
+Each thread has a **private L1 data cache** (Phase 5) with the following features:
+
+- **2-way set-associative** organization (SET=16 sets by default)
+- **Write-through** policy (no dirty bits needed)
+- **Hit latency**: 1 cycle (tag look-up registered, data presented next cycle)
+- **Miss latency**: memory-controller round-trip + 1 fill cycle
+- **LRU replacement** policy per set
+
+Data retrieved from external memory is stored in cache and can be retrieved from there on later requests, freeing up memory bandwidth to be used for new data.
 
 ## Core
 
 Each core has a number of compute resources, often built around a certain number of threads it can support. In order to maximize parallelization, these resources need to be managed optimally to maximize resource utilization.
 
-In this simplified GPU, each core processed one **block** at a time, and for each thread in a block, the core has a dedicated ALU, LSU, PC, and register file. Managing the execution of thread instructions on these resources is one of the most challening problems in GPUs.
+In this GPU, each core processes one **block** at a time, and for each thread in a block, the core has a dedicated ALU, LSU, PC, scalar register file, vector register file, and L1 cache. Managing the execution of thread instructions on these resources is one of the most challenging problems in GPUs.
 
 ### Scheduler
 
-Each core has a single scheduler that manages the execution of threads.
+Each core has a single scheduler that manages the execution of threads through a 7-stage pipeline.
 
 The tiny-gpu scheduler executes instructions for a single block to completion before picking up a new block, and it executes instructions for all threads in-sync and sequentially.
+
+**Phase 3 — Sparsity Skip:** If all threads in a warp have zero-valued operands for an ALU operation, the scheduler skips the EXECUTE stage and writes zero directly, saving power on sparse ML workloads.
+
+**Phase 4 — ROB Hazard Stall:** Before advancing past the REQUEST stage, the scheduler checks whether either source register has an unresolved in-flight write in the ROB. If so, the pipeline stalls until the hazard clears or the value is forwarded.
 
 In more advanced schedulers, techniques like **pipelining** are used to stream the execution of multiple instructions subsequent instructions to maximize resource utilization before previous instructions are fully complete. Additionally, **warp scheduling** can be use to execute multiple batches of threads within a block in parallel.
 
 The main constraint the scheduler has to work around is the latency associated with loading & storing data from global memory. While most instructions can be executed synchronously, these load-store operations are asynchronous, meaning the rest of the instruction execution has to be built around these long wait times.
 
+### Reorder Buffer (ROB)
+
+**Phase 4** introduces a lightweight Tomasulo-style reorder buffer for out-of-order execution:
+
+- **In-order allocation** at the tail, **in-order commit** at the head
+- **Out-of-order writeback**: any in-flight entry can be marked done once its execution unit finishes
+- **Hazard detection**: stalls issue when a source register has a pending in-flight write
+- **Result forwarding**: if an in-flight entry is already done (written back but not yet committed), the value can be forwarded directly
+
+Each ROB entry covers one warp-level instruction and holds per-thread result data, since all threads in a warp execute the same instruction (SIMD).
+
 ### Fetcher
 
-Asynchronously fetches the instruction at the current program counter from program memory (most should actually be fetching from cache after a single block is executed).
+Asynchronously fetches the 32-bit instruction at the current program counter from program memory.
 
 ### Decoder
 
-Decodes the fetched instruction into control signals for thread execution.
+Decodes the fetched 32-bit RV32IM instruction into control signals for thread execution, including:
+- Standard RV32I opcodes (LUI, AUIPC, JAL, JALR, BRANCH, LOAD, STORE, OP-IMM, OP, SYSTEM)
+- RV32M multiply/divide extensions
+- Custom opcodes: `CUSTOM0` (RET), `CUSTOM1` (INT4/FP32), `CUSTOM2` (128-bit vector SIMD)
 
 ### Register Files
 
-Each thread has it's own dedicated set of register files. The register files hold the data that each thread is performing computations on, which enables the same-instruction multiple-data (SIMD) pattern.
+**Scalar Registers (RV32):** Each thread has 32 × 32-bit scalar registers (x0-x31), following the RISC-V convention:
+- x0 is hardwired to zero
+- x13-x15 are read-only GPU special registers: `%blockIdx`, `%blockDim`, `%threadIdx`
+- The rest are general-purpose read/write registers
 
-Importantly, each register file contains a few read-only registers holding data about the current block & thread being executed locally, enabling kernels to be executed with different data based on the local thread id.
+**Vector Registers (Phase 7):** Each thread has 16 × 128-bit vector registers (v0-v15):
+- v0 is hardwired to zero
+- v13-v15 mirror the scalar special registers (broadcast to all lanes)
+- Used for packed SIMD operations (INT8/INT4/FP32)
+
+The register files hold the data that each thread is performing computations on, which enables the same-instruction multiple-data (SIMD) pattern.
 
 ### ALUs
 
-Dedicated arithmetic-logic unit for each thread to perform computations. Handles the `ADD`, `SUB`, `MUL`, `DIV` arithmetic instructions.
+Dedicated arithmetic-logic unit for each thread to perform scalar computations. Supports full RV32IM integer operations:
 
-Also handles the `CMP` comparison instruction which actually outputs whether the result of the difference between two registers is negative, zero or positive - and stores the result in the `NZP` register in the PC unit.
+- **RV32I**: `ADD`, `SUB`, `SLL`, `SLT`, `SLTU`, `XOR`, `SRL`, `SRA`, `OR`, `AND`, `LUI`
+- **RV32M**: `MUL`, `MULH`, `MULHSU`, `MULHU`, `DIV`, `DIVU`, `REM`, `REMU`
+- **Custom (Phase 2/6)**: `DP4A` (signed/unsigned INT4 dot-product accumulate), `FP_ADD`, `FP_MUL` (stubs)
+
+Also handles branch condition evaluation for `BEQ`, `BNE`, `BLT`, `BGE`, `BLTU`, `BGEU`.
+
+### Vector ALUs (Phase 7)
+
+Dedicated 128-bit vector ALU for each thread to perform packed SIMD operations:
+
+- `VADD_I8`: 16 × INT8 packed add
+- `VMUL_I8`: 16 × INT8 packed multiply-low
+- `VMADD_I8`: 16 × INT8 multiply-accumulate
+- `VDP4A_I4`: 4 × (8 × INT4 signed DP4A) — 4 parallel 32-bit accumulators
+- `VADD_F32`: 4 × FP32 add (stub, integer approximation)
+- `VMUL_F32`: 4 × FP32 multiply (stub, placeholder)
+- `VMADD_F32`: 4 × FP32 fused multiply-add (stub)
+- `VPREFETCH`: Prefetch hint
+
+Intel DSP inference hint: `(* use_dsp = "yes" *)` on multiply paths encourages Quartus to infer DSP blocks.
 
 ### LSUs
 
 Dedicated load-store unit for each thread to access global data memory.
 
-Handles the `LDR` & `STR` instructions - and handles async wait times for memory requests to be processed and relayed by the memory controller.
+Handles standard RV32I memory operations (`LB`, `LH`, `LW`, `LBU`, `LHU`, `SB`, `SH`, `SW`) and Phase 7 vector extensions (`VLW.Q`, `VSW.Q` for 128-bit quad-word transfers).
+
+Manages async wait times for memory requests, with L1 cache hits returning in 1 cycle and misses requiring a memory-controller round-trip.
 
 ### PCs
 
-Dedicated program-counter for each unit to determine the next instructions to execute on each thread.
+Dedicated program-counter for each thread to determine the next instruction to execute.
 
-By default, the PC increments by 1 after every instruction.
+By default, the PC increments by 4 after every 32-bit instruction.
 
-With the `BRnzp` instruction, the NZP register checks to see if the NZP register (set by a previous `CMP` instruction) matches some case - and if it does, it will branch to a specific line of program memory. _This is how loops and conditionals are implemented._
+With branch instructions (`BEQ`, `BNE`, `BLT`, etc.), the ALU evaluates the branch condition and the PC updates to the target address if taken. With `JAL`/`JALR`, the PC jumps to a new address and the link register (rd) is set to PC+4.
 
-Since threads are processed in parallel, tiny-gpu assumes that all threads "converge" to the same program counter after each instruction - which is a naive assumption for the sake of simplicity.
+Since threads are processed in parallel, tiny-gpu assumes that all threads "converge" to the same program counter after each instruction — which is a naive assumption for the sake of simplicity.
 
-In real GPUs, individual threads can branch to different PCs, causing **branch divergence** where a group of threads threads initially being processed together has to split out into separate execution.
+In real GPUs, individual threads can branch to different PCs, causing **branch divergence** where a group of threads initially being processed together has to split out into separate execution.
+
+### Graphics Pipeline (Phase 6)
+
+Optional graphics hardware components:
+
+**Rasterizer:** Scan-line tile rasterizer with barycentric interpolation. Converts triangle primitives into a stream of covered fragments (pixels). Vertex inputs use 16.16 fixed-point format.
+
+**Texture Unit:** Bilinear filtering with INT8 texels. Inputs are 8.8 fixed-point UV coordinates. Supports greyscale textures (RGBA stub).
+
+**Framebuffer Interface:** Connects the rasterizer output to the display/framebuffer memory.
 
 # ISA
 
 ![ISA](/docs/images/isa.png)
 
-tiny-gpu implements a simple 11 instruction ISA built to enable simple kernels for proof-of-concept like matrix addition & matrix multiplication (implementation further down on this page).
+tiny-gpu implements a 32-bit **RISC-V RV32IM** base ISA with custom extensions for GPU workloads, ML inference, and vector SIMD.
 
-For these purposes, it supports the following instructions:
+## Base RV32IM
 
-- `BRnzp` - Branch instruction to jump to another line of program memory if the NZP register matches the `nzp` condition in the instruction.
-- `CMP` - Compare the value of two registers and store the result in the NZP register to use for a later `BRnzp` instruction.
-- `ADD`, `SUB`, `MUL`, `DIV` - Basic arithmetic operations to enable tensor math.
-- `LDR` - Load data from global memory.
-- `STR` - Store data into global memory.
-- `CONST` - Load a constant value into a register.
-- `RET` - Signal that the current thread has reached the end of execution.
+Standard RISC-V integer (`I`) and multiply/divide (`M`) instructions are fully supported:
 
-Each register is specified by 4 bits, meaning that there are 16 total registers. The first 13 register `R0` - `R12` are free registers that support read/write. The last 3 registers are special read-only registers used to supply the `%blockIdx`, `%blockDim`, and `%threadIdx` critical to SIMD.
+- **LUI/AUIPC**: Load upper immediate / add upper immediate to PC
+- **JAL/JALR**: Jump and link (function calls, loops)
+- **BRANCH**: Conditional branches (`BEQ`, `BNE`, `BLT`, `BGE`, `BLTU`, `BGEU`)
+- **LOAD/STORE**: Memory access (`LB`, `LH`, `LW`, `LBU`, `LHU`, `SB`, `SH`, `SW`)
+- **OP-IMM**: Immediate arithmetic (`ADDI`, `SLTI`, `SLTIU`, `XORI`, `ORI`, `ANDI`, `SLLI`, `SRLI`, `SRAI`)
+- **OP**: Register arithmetic (`ADD`, `SUB`, `SLL`, `SLT`, `SLTU`, `XOR`, `SRL`, `SRA`, `OR`, `AND`)
+- **RV32M**: `MUL`, `MULH`, `MULHSU`, `MULHU`, `DIV`, `DIVU`, `REM`, `REMU`
+
+## Custom Extensions
+
+| Opcode | Name | Description |
+|--------|------|-------------|
+| `CUSTOM0` (`0001011`) | `RET` | Thread retirement |
+| `CUSTOM1` (`0101011`) | `DP4A` / `FP32` | Scalar INT4 dot-product or FP32 ops |
+| `CUSTOM2` (`1001011`) | Vector SIMD | 128-bit packed vector operations |
+
+### Scalar Custom Operations (CUSTOM1)
+
+| funct3 | Operation | Description |
+|--------|-----------|-------------|
+| `000` | `DP4A` | Signed INT4 dot-product accumulate (8× INT4 pairs) |
+| `001` | `DP4A.U` | Unsigned INT4 dot-product accumulate |
+| `010` | `FP.ADD` | FP32 add (stub — integer approximation) |
+| `011` | `FP.MUL` | FP32 multiply (stub — placeholder) |
+
+### Vector Operations (CUSTOM2)
+
+| funct3 | Operation | Description | Lanes |
+|--------|-----------|-------------|-------|
+| `000` | `VADD.I8` | 16 × INT8 packed add | 16 × 8-bit |
+| `001` | `VMUL.I8` | 16 × INT8 packed multiply-low | 16 × 8-bit |
+| `010` | `VMADD.I8` | 16 × INT8 multiply-accumulate | 16 × 8-bit |
+| `011` | `VDP4A.I4` | 4 × (8 × INT4 signed DP4A) | 4 × 32-bit |
+| `100` | `VADD.F32` | 4 × FP32 add (stub) | 4 × 32-bit |
+| `101` | `VMUL.F32` | 4 × FP32 multiply (stub) | 4 × 32-bit |
+| `110` | `VMADD.F32` | 4 × FP32 FMA (stub) | 4 × 32-bit |
+| `111` | `VPREFETCH` | Prefetch hint | — |
+
+## Register File
+
+### Scalar Registers (32 × 32-bit)
+
+Following the RISC-V convention:
+- `x0` — Hardwired zero
+- `x1-x12` — General-purpose read/write
+- `x13` — `%blockIdx` (read-only GPU special register)
+- `x14` — `%blockDim` (read-only GPU special register)
+- `x15` — `%threadIdx` (read-only GPU special register)
+- `x16-x31` — General-purpose read/write
+
+### Vector Registers (16 × 128-bit per thread)
+
+- `v0` — Hardwired zero
+- `v1-v12` — General-purpose read/write
+- `v13` — `%blockIdx` (broadcast to all lanes)
+- `v14` — `%blockDim` (broadcast to all lanes)
+- `v15` — `%threadIdx` (broadcast to all lanes)
 
 # Execution
 
-### Core
+### Pipeline Stages
 
-Each core follows the following control flow going through different stages to execute each instruction:
+Each core follows a 7-stage pipeline to execute each instruction:
 
-1. `FETCH` - Fetch the next instruction at current program counter from program memory.
-2. `DECODE` - Decode the instruction into control signals.
-3. `REQUEST` - Request data from global memory if necessary (if `LDR` or `STR` instruction).
-4. `WAIT` - Wait for data from global memory if applicable.
-5. `EXECUTE` - Execute any computations on data.
-6. `UPDATE` - Update register files and NZP register.
+1. `IDLE` — Wait for block dispatch from the scheduler
+2. `FETCH` — Fetch the 32-bit instruction at the current PC from program memory
+3. `DECODE` — Decode the instruction into control signals and allocate a ROB entry
+4. `REQUEST` — Read register files (scalar + vector); check ROB hazards; request L1 cache/memory if needed
+5. `WAIT` — Wait for L1 cache (hit = 1 cycle) or memory controller (miss = round-trip + fill)
+6. `EXECUTE` — Perform ALU/vector ALU computations; ROB writeback
+7. `UPDATE` — Commit ROB entry to register file in-order; update PC
 
-The control flow is laid out like this for the sake of simplicity and understandability.
+The control flow is laid out like this for the sake of clarity and understandability.
 
-In practice, several of these steps could be compressed to be optimize processing times, and the GPU could also use **pipelining** to stream and coordinate the execution of many instructions on a cores resources without waiting for previous instructions to finish.
+### Out-of-Order Execution (Phase 4)
+
+The ROB allows instructions to complete out-of-order while committing in-order:
+
+- **Allocation**: In-order at the tail when instruction enters DECODE
+- **Writeback**: Out-of-order when execution unit finishes (ALU, LSU, vector ALU)
+- **Commit**: In-order at the head when all prior instructions have completed
+- **Forwarding**: If a source register's value is in the ROB and already written back, it can be forwarded directly without waiting for commit
+- **Stalling**: If a source register has a pending in-flight write, the scheduler stalls in REQUEST until the hazard clears
+
+This enables load-latency hiding: while one instruction waits for memory, subsequent independent instructions can execute.
+
+### Sparsity Skip (Phase 3)
+
+For ML workloads with sparse tensors, if all threads in a warp have zero-valued operands for an ALU operation, the scheduler skips the EXECUTE stage entirely and writes zero directly to the destination register. This saves power and cycles on sparse operations.
 
 ### Thread
 
 ![Thread](/docs/images/thread.png)
 
-Each thread within each core follows the above execution path to perform computations on the data in it's dedicated register file.
+Each thread within each core follows the above execution path to perform computations on the data in its dedicated register file.
 
 This resembles a standard CPU diagram, and is quite similar in functionality as well. The main difference is that the `%blockIdx`, `%blockDim`, and `%threadIdx` values lie in the read-only registers for each thread, enabling SIMD functionality.
 
 # Kernels
 
-I wrote a matrix addition and matrix multiplication kernel using my ISA as a proof of concept to demonstrate SIMD programming and execution with my GPU. The test files in this repository are capable of fully simulating the execution of these kernels on the GPU, producing data memory states and a complete execution trace.
+I wrote matrix addition, matrix multiplication, and vector dot-product kernels using RV32IM as a proof of concept to demonstrate SIMD programming and execution with the GPU. The test files in this repository are capable of fully simulating the execution of these kernels, producing data memory states and a complete execution trace.
 
-### Matrix Addition
+### Matrix Addition (RV32I)
 
-This matrix addition kernel adds two 1 x 8 matrices by performing 8 element wise additions in separate threads.
-
-This demonstration makes use of the `%blockIdx`, `%blockDim`, and `%threadIdx` registers to show SIMD programming on this GPU. It also uses the `LDR` and `STR` instructions which require async memory management.
-
-`matadd.asm`
+This kernel adds two 1×8 matrices by performing 8 element-wise additions across separate threads. It demonstrates basic RV32I load/store, arithmetic, and the `%blockIdx` / `%blockDim` / `%threadIdx` SIMD pattern.
 
 ```asm
-.threads 8
-.data 0 1 2 3 4 5 6 7          ; matrix A (1 x 8)
-.data 0 1 2 3 4 5 6 7          ; matrix B (1 x 8)
+# Matrix A at data[0..7], Matrix B at data[8..15], Result at data[16..23]
+# Scalar values are packed into the lower 32 bits of each 128-bit word
 
-MUL R0, %blockIdx, %blockDim
-ADD R0, R0, %threadIdx         ; i = blockIdx * blockDim + threadIdx
+mul     x10, x13, x14        # x10 = blockIdx * blockDim
+add     x10, x10, x15        # i = blockIdx * blockDim + threadIdx
 
-CONST R1, #0                   ; baseA (matrix A base address)
-CONST R2, #8                   ; baseB (matrix B base address)
-CONST R3, #16                  ; baseC (matrix C base address)
+li      x11, 0               # baseA = 0
+li      x12, 8               # baseB = 8
+li      x13, 16              # baseC = 16
 
-ADD R4, R1, R0                 ; addr(A[i]) = baseA + i
-LDR R4, R4                     ; load A[i] from global memory
+add     x14, x11, x10        # addr(A[i]) = baseA + i
+lw      x14, 0(x14)          # x14 = A[i]
 
-ADD R5, R2, R0                 ; addr(B[i]) = baseB + i
-LDR R5, R5                     ; load B[i] from global memory
+add     x15, x12, x10        # addr(B[i]) = baseB + i
+lw      x15, 0(x15)          # x15 = B[i]
 
-ADD R6, R4, R5                 ; C[i] = A[i] + B[i]
+add     x16, x14, x15        # C[i] = A[i] + B[i]
 
-ADD R7, R3, R0                 ; addr(C[i]) = baseC + i
-STR R7, R6                     ; store C[i] in global memory
+add     x17, x13, x10        # addr(C[i]) = baseC + i
+sw      x16, 0(x17)          # store C[i]
 
-RET                            ; end of kernel
+ret                          # thread done
 ```
 
-### Matrix Multiplication
+### Matrix Multiplication (RV32IM)
 
-The matrix multiplication kernel multiplies two 2x2 matrices. It performs element wise calculation of the dot product of the relevant row and column and uses the `CMP` and `BRnzp` instructions to demonstrate branching within the threads (notably, all branches converge so this kernel works on the current tiny-gpu implementation).
-
-`matmul.asm`
+Multiplies two 2×2 matrices using scalar RV32IM with a loop. Demonstrates `mul`, `div`, `blt` branching, and accumulated dot-products.
 
 ```asm
-.threads 4
-.data 1 2 3 4                  ; matrix A (2 x 2)
-.data 1 2 3 4                  ; matrix B (2 x 2)
+# A = [[1,2],[3,4]] at data[0..3], B = [[1,2],[3,4]] at data[4..7]
+# Result C at data[8..11]
 
-MUL R0, %blockIdx, %blockDim
-ADD R0, R0, %threadIdx         ; i = blockIdx * blockDim + threadIdx
+mul     x1, x13, x14         # i = blockIdx * blockDim + threadIdx
+add     x1, x1, x15
 
-CONST R1, #1                   ; increment
-CONST R2, #2                   ; N (matrix inner dimension)
-CONST R3, #0                   ; baseA (matrix A base address)
-CONST R4, #4                   ; baseB (matrix B base address)
-CONST R5, #8                   ; baseC (matrix C base address)
+li      x2, 1                # increment = 1
+li      x3, 2                # N = 2
+li      x4, 0                # baseA = 0
+li      x5, 4                # baseB = 4
+li      x6, 8                # baseC = 8
 
-DIV R6, R0, R2                 ; row = i // N
-MUL R7, R6, R2
-SUB R7, R0, R7                 ; col = i % N
+div     x7, x1, x3           # row = i // N
+mul     x8, x7, x3
+sub     x9, x1, x8           # col = i % N
 
-CONST R8, #0                   ; acc = 0
-CONST R9, #0                   ; k = 0
+li      x10, 0               # acc = 0
+li      x11, 0               # k = 0
 
 LOOP:
-  MUL R10, R6, R2
-  ADD R10, R10, R9
-  ADD R10, R10, R3             ; addr(A[i]) = row * N + k + baseA
-  LDR R10, R10                 ; load A[i] from global memory
+  mul   x12, x7, x3          # addr(A) = row * N + k + baseA
+  add   x12, x12, x11
+  add   x12, x12, x4
+  lw    x12, 0(x12)          # x12 = A[row*N + k]
 
-  MUL R11, R9, R2
-  ADD R11, R11, R7
-  ADD R11, R11, R4             ; addr(B[i]) = k * N + col + baseB
-  LDR R11, R11                 ; load B[i] from global memory
+  mul   x13, x11, x3         # addr(B) = k * N + col + baseB
+  add   x13, x13, x9
+  add   x13, x13, x5
+  lw    x13, 0(x13)          # x13 = B[k*N + col]
 
-  MUL R12, R10, R11
-  ADD R8, R8, R12              ; acc = acc + A[i] * B[i]
+  mul   x14, x12, x13        # x14 = A * B
+  add   x10, x10, x14        # acc += A * B
 
-  ADD R9, R9, R1               ; increment k
+  add   x11, x11, x2         # k++
+  blt   x11, x3, LOOP        # loop while k < N
 
-  CMP R9, R2
-  BRn LOOP                    ; loop while k < N
+add     x15, x6, x1          # addr(C[i]) = baseC + i
+sw      x10, 0(x15)          # store C[i]
 
-ADD R9, R5, R0                 ; addr(C[i]) = baseC + i
-STR R9, R8                     ; store C[i] in global memory
+ret                          # thread done
+```
 
-RET                            ; end of kernel
+### Vector DP4A (Phase 7 — CUSTOM2)
+
+Demonstrates 128-bit vector SIMD using the `VDP4A.I4` instruction. Each thread computes a 4-lane INT4 dot-product across 128-bit vectors.
+
+```asm
+# Memory layout (128-bit words):
+# addr 0-3: Row vectors A (one per thread)
+# addr 4:   Column vector B (shared)
+# addr 8-11: Output C (one per thread)
+
+mul     x1, x13, x14         # i = blockIdx * blockDim + threadIdx
+add     x1, x1, x15
+
+vlw.q   v1, x1               # v1 = A[i] (128-bit row vector)
+
+li      x2, 4
+vlw.q   v2, x2               # v2 = B (128-bit column vector)
+
+vdp4a.i4 v3, v1, v2          # v3 = dp4a(v1, v2, v0) ; v0 = 0
+
+li      x3, 8
+add     x4, x3, x1           # output address = 8 + i
+vsw.q   v3, x4               # store 128-bit result
+
+ret                          # thread done
 ```
 
 # Simulation
 
-tiny-gpu is setup to simulate the execution of both of the above kernels. Before simulating, you'll need to install [iverilog](https://steveicarus.github.io/iverilog/usage/installation.html) and [cocotb](https://docs.cocotb.org/en/stable/install.html):
+tiny-gpu is setup to simulate the execution of all three kernel types (scalar RV32I, scalar RV32IM, and vector SIMD). Before simulating, you'll need to install [iverilog](https://steveicarus.github.io/iverilog/usage/installation.html), [sv2v](https://github.com/zachjs/sv2v), and [cocotb](https://docs.cocotb.org/en/stable/install.html):
 
-- Install Verilog compilers with `brew install icarus-verilog` and `pip3 install cocotb`
-- Download the latest version of sv2v from https://github.com/zachjs/sv2v/releases, unzip it and put the binary in $PATH.
-- Run `mkdir build` in the root directory of this repository.
+### Prerequisites
 
-Once you've installed the pre-requisites, you can run the kernel simulations with `make test_matadd` and `make test_matmul`.
+**Option A: Nix (recommended for NixOS/Linux)**
+```bash
+nix-shell -p iverilog python3 python3Packages.cocotb gnumake
+# sv2v must be installed separately (download from GitHub releases)
+```
+
+**Option B: Manual installation**
+- Install Icarus Verilog: `brew install icarus-verilog` (macOS) or `apt install iverilog` (Ubuntu)
+- Install sv2v: Download from https://github.com/zachjs/sv2v/releases, unzip and put the binary in `$PATH`
+- Install cocotb: `pip3 install cocotb`
+- Run `mkdir -p build` in the root directory of this repository
+
+### Run Tests
+
+Once you've installed the pre-requisites, run the kernel simulations:
+
+```bash
+make test_matadd    # Scalar matrix addition (RV32I)
+make test_matmul    # Scalar matrix multiplication + vector DP4A (RV32IM + CUSTOM2)
+```
 
 Executing the simulations will output a log file in `test/logs` with the initial data memory state, complete execution trace of the kernel, and final data memory state.
 
-If you look at the initial data memory state logged at the start of the logfile for each, you should see the two start matrices for the calculation, and in the final data memory at the end of the file you should also see the resultant matrix.
+### Execution Traces
 
 Below is a sample of the execution traces, showing on each cycle the execution of every thread within every core, including the current instruction, PC, register values, states, etc.
 
 ![execution trace](docs/images/trace.png)
 
-**For anyone trying to run the simulation or play with this repo, please feel free to DM me on [twitter](https://twitter.com/majmudaradam) if you run into any issues - I want you to get this running!**
+**Note:** The test suite encodes RV32IM instructions as binary literals loaded into program memory. The hardware decoder expects 32-bit RISC-V instructions. The `format.py` debug utility can disassemble both legacy 16-bit and new 32-bit instructions for readable traces.
 
-# Advanced Functionality
+**For anyone trying to run the simulation or play with this repo, please feel free to open an issue if you run into any issues - I want you to get this running!**
 
-For the sake of simplicity, there were many additional features implemented in modern GPUs that heavily improve performance & functionality that tiny-gpu omits. We'll discuss some of those most critical features in this section.
+# Optimizations
 
-### Multi-layered Cache & Shared Memory
+tiny-gpu implements several production-grade GPU features. This section distinguishes between what is already implemented and what remains future work.
 
-In modern GPUs, multiple different levels of caches are used to minimize the amount of data that needs to get accessed from global memory. tiny-gpu implements only one cache layer between individual compute units requesting memory and the memory controllers which stores recent cached data.
+## Implemented Optimizations
 
-Implementing multi-layered caches allows frequently accessed data to be cached more locally to where it's being used (with some caches within individual compute cores), minimizing load times for this data.
+### L1 Data Cache (Phase 5)
 
-Different caching algorithms are used to maximize cache-hits - this is a critical dimension that can be improved on to optimize memory access.
+Each thread has a private 2-way set-associative L1 data cache with LRU replacement and write-through policy. This reduces global memory bandwidth pressure by storing recently accessed data in SRAM.
 
-Additionally, GPUs often use **shared memory** for threads within the same block to access a single memory space that can be used to share results with other threads.
+### Out-of-Order Execution / ROB (Phase 4)
+
+The Tomasulo-style reorder buffer enables load-latency hiding through:
+- In-order allocation and commit with out-of-order writeback
+- Hazard detection and result forwarding
+- Stalling only when dependencies are truly unresolved
+
+### Sparsity-Aware Execution (Phase 3)
+
+For sparse ML tensors, zero-valued operations are detected and skipped, saving power and cycles by bypassing the ALU entirely.
+
+### Vector SIMD (Phase 7)
+
+128-bit packed operations accelerate ML inference:
+- INT8: 16-lane add, multiply, multiply-accumulate
+- INT4: 4-lane DP4A (dot-product accumulate) — critical for quantized neural networks
+- FP32: 4-lane stubs (awaiting Intel FP IP)
+
+### Graphics Pipeline (Phase 6)
+
+Basic graphics hardware for educational rasterization:
+- Scan-line rasterizer with barycentric interpolation
+- Bilinear texture filtering with INT8 texels
+- Framebuffer interface
+
+## Future Optimizations
+
+### Multi-level Cache Hierarchy
+
+Implement an L2 cache shared across cores to further reduce global memory bandwidth. Add shared memory within blocks for thread-to-thread data exchange.
 
 ### Memory Coalescing
 
-Another critical memory optimization used by GPUs is **memory coalescing.** Multiple threads running in parallel often need to access sequential addresses in memory (for example, a group of threads accessing neighboring elements in a matrix) - but each of these memory requests is put in separately.
-
-Memory coalescing is used to analyzing queued memory requests and combine neighboring requests into a single transaction, minimizing time spent on addressing, and making all the requests together.
+Combine memory requests from adjacent threads into a single transaction. Currently each thread issues separate requests even when accessing sequential addresses.
 
 ### Pipelining
 
-In the control flow for tiny-gpu, cores wait for one instruction to be executed on a group of threads before starting execution of the next instruction.
-
-Modern GPUs use **pipelining** to stream execution of multiple sequential instructions at once while ensuring that instructions with dependencies on each other still get executed sequentially.
-
-This helps to maximize resource utilization within cores as resources are not sitting idle while waiting (ex: during async memory requests).
+Stream execution of multiple sequential instructions simultaneously while respecting dependencies. The current implementation waits for each instruction to complete before starting the next.
 
 ### Warp Scheduling
 
-Another strategy used to maximize resource utilization on course is **warp scheduling.** This approach involves breaking up blocks into individual batches of theads that can be executed together.
-
-Multiple warps can be executed on a single core simultaneously by executing instructions from one warp while another warp is waiting. This is similar to pipelining, but dealing with instructions from different threads.
+Break blocks into warps (subgroups of threads) and execute multiple warps concurrently on a single core. While one warp waits for memory, another warp can execute.
 
 ### Branch Divergence
 
-tiny-gpu assumes that all threads in a single batch end up on the same PC after each instruction, meaning that threads can be executed in parallel for their entire lifetime.
-
-In reality, individual threads could diverge from each other and branch to different lines based on their data. With different PCs, these threads would need to split into separate lines of execution, which requires managing diverging threads & paying attention to when threads converge again.
+Handle threads that branch to different PCs within the same warp. This requires tracking divergent paths and reconvergence points.
 
 ### Synchronization & Barriers
 
-Another core functionality of modern GPUs is the ability to set **barriers** so that groups of threads in a block can synchronize and wait until all other threads in the same block have gotten to a certain point before continuing execution.
+Implement barrier instructions so threads within a block can synchronize at specific points. Useful for shared memory exchange and ensuring all threads have reached a checkpoint.
 
-This is useful for cases where threads need to exchange shared data with each other so they can ensure that the data has been fully processed.
+### FP32 Silicon
+
+Replace current FP32 stubs with Intel Floating-Point IP (`alt_fp_add` / `alt_fp_mult`) for correct IEEE-754 floating-point operations.
 
 # Next Steps
 
-Updates I want to make in the future to improve the design, anyone else is welcome to contribute as well:
+Updates I want to make in the future to improve the design. Anyone else is welcome to contribute as well:
 
-- [ ] Add a simple cache for instructions
-- [ ] Build an adapter to use GPU with Tiny Tapeout 7
-- [ ] Add basic branch divergence
-- [ ] Add basic memory coalescing
-- [ ] Add basic pipelining
-- [ ] Optimize control flow and use of registers to improve cycle time
-- [ ] Write a basic graphics kernel or add simple graphics hardware to demonstrate graphics functionality
+## Completed ✓
 
-**For anyone curious to play around or make a contribution, feel free to put up a PR with any improvements you'd like to add 😄**
+- [x] Add L1 data cache (Phase 5 — per-thread, 2-way set-associative)
+- [x] Add out-of-order ROB (Phase 4 — Tomasulo-style with forwarding)
+- [x] Add vector extensions (Phase 7 — 128-bit INT8/INT4 SIMD)
+- [x] Add graphics rasterizer + texture unit (Phase 6)
+- [x] Add sparsity skip (Phase 3 — zero-detection power saving)
+- [x] Migrate to RV32IM base ISA (Phase 1)
+- [x] Add INT4/FP32 custom extensions (Phase 2/6)
+
+## In Progress / TODO
+
+- [ ] Update test suite to fully exercise all RV32IM instructions
+- [ ] Fix sv2v compatibility for `rasterizer.sv` (automatic keyword in procedural blocks)
+- [ ] Add branch divergence handling
+- [ ] Add memory coalescing
+- [ ] Add warp scheduling
+- [ ] Replace FP32 stubs with Intel FP IP (alt_fp_add / alt_fp_mult)
+- [ ] Add L2 cache
+- [ ] Add shared memory / barriers
+- [ ] Build an adapter for Tiny Tapeout
+- [ ] Optimize control flow and cycle time
+- [ ] Write a basic graphics kernel demo
+
+**For anyone curious to play around or make a contribution, feel free to put up a PR with any improvements you'd like to add!**
