@@ -1,11 +1,18 @@
 `default_nettype none
 `timescale 1ns/1ns
 
-// INSTRUCTION DECODER (RV32IM + INT4 + FP32 Extensions — Phase 1/2/6)
+// INSTRUCTION DECODER (RV32IM + INT4 + FP32 + Vector Extensions — Phase 1/2/6/7)
 // Decodes a 32-bit RISC-V instruction into control signals.
 // Custom extensions:
 //   CUSTOM0 (opcode 0001011) — thread RET
-//   CUSTOM1 (opcode 0101011) — INT4 DP4A / FP32 ops
+//   CUSTOM1 (opcode 0101011) — scalar INT4 DP4A / FP32 ops (Phase 2/6)
+//   CUSTOM2 (opcode 1001011) — 128-bit vector SIMD ops     (Phase 7)
+//
+// CUSTOM2 encoding:
+//   funct3[2:0] selects the vector operation (VALU_* codes matching vec_alu.sv)
+//   rd[3:0]     = vrd  address (4-bit, 16 vector registers)
+//   rs1[3:0]    = vrs1 address
+//   rs2[3:0]    = vrs2 address
 module decoder (
     input wire clk,
     input wire reset,
@@ -33,7 +40,14 @@ module decoder (
     output reg [2:0]  decoded_branch_op,         // Branch condition (funct3)
     output reg [1:0]  decoded_pc_src,            // 0=PC+4 1=branch 2=JAL 3=JALR
     output reg        decoded_pc_as_op1,         // Use PC as ALU op1 (AUIPC/JAL/JALR)
-    output reg        decoded_ret                // Thread done (custom RET)
+    output reg        decoded_ret,               // Thread done (custom RET)
+
+    // ---- Phase 7: Vector CUSTOM2 decode outputs ----
+    output reg        decoded_vreg_write_enable, // Write result to vector rd
+    output reg [4:0]  decoded_valu_op,           // Vector ALU operation selector
+    output reg [3:0]  decoded_vrd_address,       // Vector destination register
+    output reg [3:0]  decoded_vrs1_address,      // Vector source register 1
+    output reg [3:0]  decoded_vrs2_address       // Vector source register 2
 );
 
     // ---- RV32I standard opcodes ----
@@ -42,13 +56,14 @@ module decoder (
     localparam OP_OP_IMM  = 7'b0010011;
     localparam OP_AUIPC   = 7'b0010111;
     localparam OP_STORE   = 7'b0100011;
-    localparam OP_CUSTOM1 = 7'b0101011; // INT4 / FP32 custom ops
+    localparam OP_CUSTOM1 = 7'b0101011; // scalar INT4 / FP32 custom ops
     localparam OP_OP      = 7'b0110011;
     localparam OP_LUI     = 7'b0110111;
     localparam OP_BRANCH  = 7'b1100011;
     localparam OP_JALR    = 7'b1100111;
     localparam OP_JAL     = 7'b1101111;
     localparam OP_SYSTEM  = 7'b1110011; // ECALL/EBREAK treated as NOP
+    localparam OP_CUSTOM2 = 7'b1001011; // Phase 7: 128-bit vector SIMD ops
 
     // ---- ALU operation codes (must match alu.sv) ----
     localparam ALU_ADD    = 5'd0;
@@ -121,6 +136,12 @@ module decoder (
             decoded_pc_src          <= PC_SRC_NEXT;
             decoded_pc_as_op1       <= 1'b0;
             decoded_ret             <= 1'b0;
+            // Phase 7 vector defaults
+            decoded_vreg_write_enable <= 1'b0;
+            decoded_valu_op           <= 5'b0;
+            decoded_vrd_address       <= 4'b0;
+            decoded_vrs1_address      <= 4'b0;
+            decoded_vrs2_address      <= 4'b0;
         end else if (core_state == 3'b010) begin // DECODE state
             // Common register fields
             decoded_rd_address  <= rd;
@@ -141,6 +162,12 @@ module decoder (
             decoded_pc_src          <= PC_SRC_NEXT;
             decoded_pc_as_op1       <= 1'b0;
             decoded_ret             <= 1'b0;
+            // Phase 7 vector defaults (cleared every DECODE; set only for CUSTOM2)
+            decoded_vreg_write_enable <= 1'b0;
+            decoded_valu_op           <= 5'b0;
+            decoded_vrd_address       <= 4'b0;
+            decoded_vrs1_address      <= 4'b0;
+            decoded_vrs2_address      <= 4'b0;
 
             case (opcode)
                 // ---- LUI: rd = imm_u ----
@@ -277,7 +304,7 @@ module decoder (
                 OP_CUSTOM0: begin
                     decoded_ret <= 1'b1;
                 end
-                // ---- CUSTOM1: INT4 / FP32 ops (Phase 2 / 6) ----
+                // ---- CUSTOM1: scalar INT4 / FP32 ops (Phase 2 / 6) ----
                 OP_CUSTOM1: begin
                     decoded_reg_write_enable <= 1'b1;
                     case (funct3)
@@ -287,6 +314,17 @@ module decoder (
                         3'b011: decoded_alu_op <= ALU_FP_MUL; // FP32 mul stub
                         default: decoded_alu_op <= ALU_ADD;
                     endcase
+                end
+                // ---- CUSTOM2: 128-bit vector SIMD ops (Phase 7) ----
+                // funct3[2:0] directly maps to VALU_* op codes in vec_alu.sv.
+                // Register fields use the lower 4 bits of the standard 5-bit
+                // RV32 register slots (16 vector registers, v0–v15).
+                OP_CUSTOM2: begin
+                    decoded_vreg_write_enable <= 1'b1;
+                    decoded_valu_op           <= {2'b0, funct3}; // 5-bit op code
+                    decoded_vrd_address       <= rd[3:0];
+                    decoded_vrs1_address      <= rs1[3:0];
+                    decoded_vrs2_address      <= rs2[3:0];
                 end
                 // ---- SYSTEM: treat as NOP (ECALL / EBREAK) ----
                 OP_SYSTEM: begin
