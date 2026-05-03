@@ -1,16 +1,18 @@
 `default_nettype none
 `timescale 1ns/1ns
 
-// COMPUTE CORE (RV32IM + INT4 + Sparsity + ROB — Phases 1–4)
+// COMPUTE CORE (RV32IM + INT4 + Sparsity + ROB + L1 Cache + 128-bit Vector — Phases 1–5,7)
 // Manages one block of threads through the 7-stage pipeline.
-// Instantiates: fetcher, decoder, scheduler, ROB, and per-thread ALU/LSU/registers/PC.
+// Instantiates: fetcher, decoder, scheduler, ROB, and per-thread
+//               ALU/LSU/registers/PC (scalar), L1-cache, vreg/vec_alu (vector).
 module core #(
     parameter DATA_MEM_ADDR_BITS    = 8,
-    parameter DATA_MEM_DATA_BITS    = 32,  // 32-bit data words (Phase 1)
+    parameter DATA_MEM_DATA_BITS    = 32,  // 32 scalar / 128 vector (VECTOR_ENABLE)
     parameter PROGRAM_MEM_ADDR_BITS = 8,
     parameter PROGRAM_MEM_DATA_BITS = 32,  // 32-bit RV32I instructions (Phase 1)
     parameter THREADS_PER_BLOCK     = 4,
-    parameter ROB_DEPTH             = 16   // Phase 4: out-of-order reorder buffer depth
+    parameter ROB_DEPTH             = 16,  // Phase 4: out-of-order reorder buffer depth
+    parameter L1_SETS               = 16   // Phase 5: L1 cache sets per thread
 ) (
     input wire clk,
     input wire reset,
@@ -20,7 +22,7 @@ module core #(
     output wire done,
 
     // Block metadata
-    input wire [7:0]                      block_id,
+    input wire [7:0]                         block_id,
     input wire [$clog2(THREADS_PER_BLOCK):0] thread_count,
 
     // Program memory
@@ -29,15 +31,15 @@ module core #(
     input  reg                             program_mem_read_ready,
     input  reg [PROGRAM_MEM_DATA_BITS-1:0] program_mem_read_data,
 
-    // Data memory (one channel per thread)
-    output reg [THREADS_PER_BLOCK-1:0]        data_mem_read_valid,
-    output reg [DATA_MEM_ADDR_BITS-1:0]        data_mem_read_address  [THREADS_PER_BLOCK-1:0],
-    input  reg [THREADS_PER_BLOCK-1:0]        data_mem_read_ready,
-    input  reg [DATA_MEM_DATA_BITS-1:0]        data_mem_read_data     [THREADS_PER_BLOCK-1:0],
-    output reg [THREADS_PER_BLOCK-1:0]        data_mem_write_valid,
-    output reg [DATA_MEM_ADDR_BITS-1:0]        data_mem_write_address [THREADS_PER_BLOCK-1:0],
-    output reg [DATA_MEM_DATA_BITS-1:0]        data_mem_write_data    [THREADS_PER_BLOCK-1:0],
-    input  reg [THREADS_PER_BLOCK-1:0]        data_mem_write_ready
+    // Data memory (one channel per thread — driven by L1 cache miss path)
+    output wire [THREADS_PER_BLOCK-1:0]                    data_mem_read_valid,
+    output wire [DATA_MEM_ADDR_BITS-1:0]                   data_mem_read_address  [THREADS_PER_BLOCK-1:0],
+    input  reg  [THREADS_PER_BLOCK-1:0]                    data_mem_read_ready,
+    input  reg  [DATA_MEM_DATA_BITS-1:0]                   data_mem_read_data     [THREADS_PER_BLOCK-1:0],
+    output wire [THREADS_PER_BLOCK-1:0]                    data_mem_write_valid,
+    output wire [DATA_MEM_ADDR_BITS-1:0]                   data_mem_write_address [THREADS_PER_BLOCK-1:0],
+    output wire [DATA_MEM_DATA_BITS-1:0]                   data_mem_write_data    [THREADS_PER_BLOCK-1:0],
+    input  reg  [THREADS_PER_BLOCK-1:0]                    data_mem_write_ready
 );
     // ---- Pipeline state ----
     reg [2:0]  core_state;
@@ -45,7 +47,7 @@ module core #(
     reg [31:0] instruction;
     reg [7:0]  current_pc;
 
-    // ---- Per-thread signals ----
+    // ---- Per-thread scalar signals ----
     reg  [31:0] rs1         [THREADS_PER_BLOCK-1:0];
     reg  [31:0] rs2         [THREADS_PER_BLOCK-1:0];
     reg  [31:0] rs3         [THREADS_PER_BLOCK-1:0]; // DP4A accumulator
@@ -56,12 +58,19 @@ module core #(
     reg  [1:0]  lsu_state   [THREADS_PER_BLOCK-1:0];
     wire [31:0] lsu_out     [THREADS_PER_BLOCK-1:0];
 
+    // ---- Per-thread vector signals (Phase 7) ----
+    wire [127:0] vs1         [THREADS_PER_BLOCK-1:0];
+    wire [127:0] vs2         [THREADS_PER_BLOCK-1:0];
+    wire [127:0] vacc        [THREADS_PER_BLOCK-1:0];
+    wire [127:0] vec_alu_out [THREADS_PER_BLOCK-1:0];
+    wire [127:0] lsu_vout    [THREADS_PER_BLOCK-1:0];
+
     // ---- Phase 3: sparsity zero-detection ----
     reg [THREADS_PER_BLOCK-1:0] rs1_zero;
     reg [THREADS_PER_BLOCK-1:0] rs2_zero;
     wire sparse_skip;
 
-    // ---- Decoded control signals ----
+    // ---- Decoded scalar control signals ----
     reg [4:0]  decoded_rd_address;
     reg [4:0]  decoded_rs1_address;
     reg [4:0]  decoded_rs2_address;
@@ -78,6 +87,16 @@ module core #(
     reg [1:0]  decoded_pc_src;
     reg        decoded_pc_as_op1;
     reg        decoded_ret;
+
+    // ---- Decoded vector control signals (Phase 7) ----
+    reg        decoded_vreg_write_enable;
+    reg [4:0]  decoded_valu_op;
+    reg [3:0]  decoded_vrd_address;
+    reg [3:0]  decoded_vrs1_address;
+    reg [3:0]  decoded_vrs2_address;
+
+    // Quad-word vector load: triggers lsu_vout → vreg write-back
+    wire decoded_vload = decoded_mem_read_enable && (decoded_mem_size == 2'b11);
 
     // ---- Phase 4: ROB interface ----
     wire                            rob_alloc_valid;
@@ -143,7 +162,13 @@ module core #(
         .decoded_branch_op(decoded_branch_op),
         .decoded_pc_src(decoded_pc_src),
         .decoded_pc_as_op1(decoded_pc_as_op1),
-        .decoded_ret(decoded_ret)
+        .decoded_ret(decoded_ret),
+        // Phase 7 vector outputs
+        .decoded_vreg_write_enable(decoded_vreg_write_enable),
+        .decoded_valu_op(decoded_valu_op),
+        .decoded_vrd_address(decoded_vrd_address),
+        .decoded_vrs1_address(decoded_vrs1_address),
+        .decoded_vrs2_address(decoded_vrs2_address)
     );
 
     // ---- Phase 4: Reorder Buffer ----
@@ -202,10 +227,25 @@ module core #(
         .sparse_skip(sparse_skip)
     );
 
-    // ---- Per-thread: ALU, LSU, register file, PC ----
+    // ---- Per-thread: scalar ALU/LSU/registers/PC + L1 cache + vector vreg/vec_alu ----
     generate
         for (i = 0; i < THREADS_PER_BLOCK; i = i + 1) begin : threads
-            // ALU
+
+            // ------------------------------------------------------------------
+            // Phase 5: L1 cache — intercepts LSU memory requests.
+            // Raw signals coming OUT of the LSU (before the cache)
+            wire lsu_raw_rv;   // read valid
+            wire [DATA_MEM_ADDR_BITS-1:0] lsu_raw_ra;   // read address
+            wire lsu_raw_wv;   // write valid
+            wire [DATA_MEM_ADDR_BITS-1:0] lsu_raw_wa;   // write address
+            wire [DATA_MEM_DATA_BITS-1:0] lsu_raw_wd;   // write data
+            // Signals coming back FROM the cache TO the LSU
+            wire lsu_cache_rr; // read ready
+            wire [DATA_MEM_DATA_BITS-1:0] lsu_cache_rd; // read data
+            wire lsu_cache_wr; // write ready
+
+            // ------------------------------------------------------------------
+            // Scalar ALU
             alu alu_instance (
                 .clk(clk), .reset(reset),
                 .enable(i < thread_count),
@@ -224,8 +264,13 @@ module core #(
                 .branch_taken(branch_taken[i])
             );
 
-            // LSU
-            lsu lsu_instance (
+            // ------------------------------------------------------------------
+            // LSU — memory interface connects to the L1 cache (not directly
+            // to the data-memory controller)
+            lsu #(
+                .DATA_MEM_ADDR_BITS(DATA_MEM_ADDR_BITS),
+                .DATA_MEM_DATA_BITS(DATA_MEM_DATA_BITS)
+            ) lsu_instance (
                 .clk(clk), .reset(reset),
                 .enable(i < thread_count),
                 .core_state(core_state),
@@ -235,6 +280,40 @@ module core #(
                 .decoded_mem_sign_extend(decoded_mem_sign_extend),
                 .rs1(rs1[i]),
                 .rs2(rs2[i]),
+                // Phase 7c: vector store/load data
+                .vrs2(vs2[i][127:0]),
+                .lsu_vout(lsu_vout[i]),
+                // LSU memory I/O → goes to L1 cache, not directly to controller
+                .mem_read_valid(lsu_raw_rv),
+                .mem_read_address(lsu_raw_ra),
+                .mem_read_ready(lsu_cache_rr),
+                .mem_read_data(lsu_cache_rd),
+                .mem_write_valid(lsu_raw_wv),
+                .mem_write_address(lsu_raw_wa),
+                .mem_write_data(lsu_raw_wd),
+                .mem_write_ready(lsu_cache_wr),
+                .lsu_state(lsu_state[i]),
+                .lsu_out(lsu_out[i])
+            );
+
+            // ------------------------------------------------------------------
+            // Phase 5: L1 cache instance (per-thread)
+            l1_cache #(
+                .SETS(L1_SETS),
+                .ADDR_BITS(DATA_MEM_ADDR_BITS),
+                .DATA_BITS(DATA_MEM_DATA_BITS)
+            ) cache_instance (
+                .clk(clk), .reset(reset),
+                // LSU side
+                .lsu_read_valid(lsu_raw_rv),
+                .lsu_read_address(lsu_raw_ra),
+                .lsu_read_ready(lsu_cache_rr),
+                .lsu_read_data(lsu_cache_rd),
+                .lsu_write_valid(lsu_raw_wv),
+                .lsu_write_address(lsu_raw_wa),
+                .lsu_write_data(lsu_raw_wd),
+                .lsu_write_ready(lsu_cache_wr),
+                // Memory-controller side — drives the core's external data ports
                 .mem_read_valid(data_mem_read_valid[i]),
                 .mem_read_address(data_mem_read_address[i]),
                 .mem_read_ready(data_mem_read_ready[i]),
@@ -242,12 +321,11 @@ module core #(
                 .mem_write_valid(data_mem_write_valid[i]),
                 .mem_write_address(data_mem_write_address[i]),
                 .mem_write_data(data_mem_write_data[i]),
-                .mem_write_ready(data_mem_write_ready[i]),
-                .lsu_state(lsu_state[i]),
-                .lsu_out(lsu_out[i])
+                .mem_write_ready(data_mem_write_ready[i])
             );
 
-            // Register file
+            // ------------------------------------------------------------------
+            // Scalar register file
             registers #(
                 .THREADS_PER_BLOCK(THREADS_PER_BLOCK),
                 .THREAD_ID(i)
@@ -256,13 +334,12 @@ module core #(
                 .enable(i < thread_count),
                 .block_id(block_id),
                 .core_state(core_state),
-                // Phase 3: suppress register write on sparse skip (result is zero)
+                // Phase 3: suppress scalar write on sparsity skip (result = 0)
                 .decoded_reg_write_enable(decoded_reg_write_enable && !sparse_skip),
                 .decoded_reg_input_mux(decoded_reg_input_mux),
                 .decoded_rd_address(decoded_rd_address),
                 .decoded_rs1_address(decoded_rs1_address),
                 .decoded_rs2_address(decoded_rs2_address),
-                // Phase 3: write zero when sparsity skip is active
                 .alu_out(sparse_skip ? 32'b0 : alu_out[i]),
                 .lsu_out(lsu_out[i]),
                 .pc_plus4(pc_plus4[i]),
@@ -271,6 +348,7 @@ module core #(
                 .rs3(rs3[i])
             );
 
+            // ------------------------------------------------------------------
             // Program counter
             pc #(
                 .PROGRAM_MEM_ADDR_BITS(PROGRAM_MEM_ADDR_BITS)
@@ -285,6 +363,44 @@ module core #(
                 .next_pc(next_pc[i]),
                 .pc_plus4(pc_plus4[i])
             );
-        end
+
+            // ------------------------------------------------------------------
+            // Phase 7a: Vector register file
+            vreg #(
+                .VREG_BITS(128),
+                .NUM_VREG(16),
+                .THREADS_PER_BLOCK(THREADS_PER_BLOCK),
+                .THREAD_ID(i)
+            ) vreg_instance (
+                .clk(clk), .reset(reset),
+                .enable(i < thread_count),
+                .block_id(block_id),
+                .core_state(core_state),
+                .decoded_vreg_write_enable(decoded_vreg_write_enable && !sparse_skip),
+                .decoded_vload(decoded_vload),
+                .decoded_vrd_address(decoded_vrd_address),
+                .decoded_vrs1_address(decoded_vrs1_address),
+                .decoded_vrs2_address(decoded_vrs2_address),
+                .vec_alu_out(vec_alu_out[i]),
+                .lsu_vout(lsu_vout[i]),
+                .vs1(vs1[i]),
+                .vs2(vs2[i]),
+                .vacc(vacc[i])
+            );
+
+            // ------------------------------------------------------------------
+            // Phase 7b: Vector ALU
+            vec_alu valu_instance (
+                .clk(clk), .reset(reset),
+                .enable(i < thread_count),
+                .core_state(core_state),
+                .decoded_valu_op(decoded_valu_op),
+                .vs1(vs1[i]),
+                .vs2(vs2[i]),
+                .vacc(vacc[i]),
+                .vec_alu_out(vec_alu_out[i])
+            );
+
+        end // threads generate
     endgenerate
 endmodule
