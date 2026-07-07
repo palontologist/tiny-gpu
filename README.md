@@ -11,6 +11,7 @@ Built with ~20 files of fully documented Verilog, the project evolves through 7 
   - [GPU](#gpu)
   - [Memory](#memory)
   - [Core](#core)
+- [Hardware Implementation](#hardware-implementation)
 - [ISA](#isa)
   - [Base RV32IM](#base-rv32im)
   - [Custom Extensions](#custom-extensions)
@@ -166,6 +167,22 @@ Dedicated program counters per thread. The PC increments by 4 for standard instr
 - **Texture Unit:** Bilinear filtering with INT8 texels (8.8 fixed-point UV).
 - **Framebuffer Interface:** Connects rasterizer output to display memory.
 
+# Hardware Implementation
+
+To move `tiny-gpu` from simulation to physical hardware, a custom carrier board has been designed. All design files, schematics, and assembly guides can be found in the [`/fpga_carrier_board_files`](/home/palontologist/Downloads/dev/tiny-gpu/fpga_carrier_board_files) directory.
+
+### Target Platform
+- **FPGA:** AMD Xilinx Artix-7 (XC7A100T-2FGG484I)
+- **Memory:** DDR3L x16 (MT41K256M16TW-107:P) for high-bandwidth data access.
+- **Video Output:** HDMI 1.4 via SII9022A transmitter.
+- **Power:** USB-C PD input with multi-rail voltage regulation (1.0V, 1.8V, 1.35V, 3.3V).
+
+### Design Workflow
+The PCB was developed using a code-first approach via **Solder CLI**, allowing for rapid iteration of the 128-bit memory bus and signal integrity optimization. The final design is compatible with KiCad.
+
+### Assembly & Bring-up
+A detailed assembly guide (`fpga_carrier_board_GUIDE.md`) is provided, covering the 3D printing of enclosure mounts, BGA soldering of the FPGA and RAM, and the step-by-step bring-up process using a JTAG debugger.
+
 # ISA
 
 ![ISA](/docs/images/isa.png)
@@ -250,8 +267,8 @@ nix-shell -p iverilog python3 python3Packages.cocotb gnumake
 
 ### Run Tests
 ```bash
-make test_matadd    #T Scalar matrix addition
-make test_matmul    # Scalar matrix multiplication + vector DP4A
+make test_matadd    # Scalar matrix addition
+make test_matmul    #L Scalar matrix multiplication + vector DP4A
 ```
 
 # Optimizations
@@ -269,7 +286,7 @@ make test_matmul    # Scalar matrix multiplication + vector DP4A
 - **Warp Scheduling:** Implement multi-warp concurrency per core.
 - **Branch Divergence:** Handle divergent execution paths.
 - **FP32 Silicon:** Replace stubs with IEEE-754 compliant FP IP.
-- **Physical Implementation:** Target an FPGA carrier board for physical bring-up.
+- **Physical Bring-up:** Finalize fabrication and test the `tiny-gpu` on the custom Artix-7 carrier board.
 
 ## Next Steps
 Contributors are welcome to help with the TODO list or submit PRs for new optimizations!
