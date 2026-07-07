@@ -1,0 +1,2344 @@
+{
+  "projectName": "FPGA Carrier Board",
+  "nodes": [
+    {
+      "id": "fpga_ecp5",
+      "name": "Main FPGA",
+      "productName": "Lattice ECP5 (LFE5UM5G-85F-8BG381C)",
+      "category": "electrical",
+      "type": "mcu",
+      "pins": [
+        "LPDDR4_DATA[0-127]",
+        "LPDDR4_ADDR_CMD",
+        "HDMI_TMDS[0-2]",
+        "HDMI_CLK",
+        "USB_C_PD_I2C",
+        "JTAG",
+        "GPIOs"
+      ],
+      "dimensions": "15x15x1mm",
+      "quantity": 1,
+      "estimatedCost": 75,
+      "purchaseUrl": "https://www.digikey.com/en/products/detail/lattice-semiconductor-corporation/LFE5UM5G-85F-8BG381C/10207869",
+      "partId": "ccfc50f4-97ae-4ba5-9d8a-699ecfa2f5af",
+      "imageUrl": "https://imgs.search.brave.com/kUxLbPu9eE-tcqjiZlaR5ujWv7j-XIf7qKeEPGw0zsM/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tbS5k/aWdpa2V5LmNvbS9W/b2x1bWUwL29wYXNk/YXRhL2QyMjAwMDEv/bWVkaWFzL2ltYWdl/cy82Mjg0LzIyMH4z/ODFDQUJHQS0xLjc2/LTE3WDE3fn4zODEu/anBn",
+      "aliexpressUrl": "https://s.click.aliexpress.com/e/_c39o3d6Z",
+      "research": {
+        "sourcing": [
+          {
+            "vendor": "Amazon",
+            "url": ""
+          },
+          {
+            "vendor": "AliExpress",
+            "url": "https://www.aliexpress.com/w/wholesale-lattice-ecp5-e-g-lfe5u-85f-6bg381c.html"
+          }
+        ]
+      },
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=Lattice+ECP5+%28LFE5UM5G-85F-8BG381C%29&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "amazonUrl": "https://www.amazon.com/s?k=Lattice%20ECP5%20(e.g.%2C%20LFE5U-85F-6BG381C)&tag=blueprintam-20",
+      "boundingBox": {
+        "width": 15,
+        "height": 1,
+        "depth": 15
+      },
+      "position3d": {
+        "x": 35,
+        "y": 20.5,
+        "z": 35
+      }
+    },
+    {
+      "id": "lpddr4_chip_0",
+      "name": "LPDDR4 Memory Chip 0",
+      "productName": "Micron MT53E256M32D2SP-046 AAT:B",
+      "category": "electrical",
+      "type": "module",
+      "pins": [
+        "DQ[0-31]",
+        "DQS",
+        "CK",
+        "CS",
+        "CA",
+        "CKE",
+        "ODT",
+        "RESET_N",
+        "VDD1/VDD2/VPP/VDDQ"
+      ],
+      "dimensions": "7.5x10x1.1mm",
+      "quantity": 1,
+      "estimatedCost": 20,
+      "purchaseUrl": "https://www.digikey.com/en/products/detail/micron-technology/MT53E256M32D2SP-046-AAT-B/6007421",
+      "partId": "4f2b1460-01ad-402f-bdca-ff7714a842cc",
+      "imageUrl": "https://imgs.search.brave.com/liWupq6_4_slwh2EbCGGGVkeOhIqHo6PsNTLA22uVhQ/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/bmV3YXJrLmNvbS9w/cm9kdWN0aW1hZ2Vz/L3N0YW5kYXJkL2Vu/X1VTLzUyMDU2MzMu/anBn",
+      "aliexpressUrl": "https://s.click.aliexpress.com/e/_c4Fwwg9R",
+      "research": {
+        "sourcing": [
+          {
+            "vendor": "Amazon",
+            "url": ""
+          },
+          {
+            "vendor": "AliExpress",
+            "url": "https://www.aliexpress.com/w/wholesale-micron-mt53d256m32d4pg-046-aat-b.html"
+          }
+        ]
+      },
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=Micron+MT53E256M32D2SP-046+AAT%3AB&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "amazonUrl": "https://www.amazon.com/s?k=Micron%20MT53D256M32D4PG-046%20AAT%3AB&tag=blueprintam-20",
+      "boundingBox": {
+        "width": 7.5,
+        "height": 1.1,
+        "depth": 10
+      },
+      "position3d": {
+        "x": 20,
+        "y": 20.55,
+        "z": 25
+      }
+    },
+    {
+      "id": "lpddr4_chip_1",
+      "name": "LPDDR4 Memory Chip 1",
+      "productName": "Micron MT53E256M32D2SP-046 AAT:B",
+      "category": "electrical",
+      "type": "module",
+      "pins": [
+        "DQ[32-63]",
+        "DQS",
+        "CK",
+        "CS",
+        "CA",
+        "CKE",
+        "ODT",
+        "RESET_N",
+        "VDD1/VDD2/VPP/VDDQ"
+      ],
+      "dimensions": "7.5x10x1.1mm",
+      "quantity": 1,
+      "estimatedCost": 20,
+      "purchaseUrl": "https://www.digikey.com/en/products/detail/micron-technology/MT53E256M32D2SP-046-AAT-B/6007421",
+      "partId": "4f2b1460-01ad-402f-bdca-ff7714a842cc",
+      "imageUrl": "https://imgs.search.brave.com/liWupq6_4_slwh2EbCGGGVkeOhIqHo6PsNTLA22uVhQ/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/bmV3YXJrLmNvbS9w/cm9kdWN0aW1hZ2Vz/L3N0YW5kYXJkL2Vu/X1VTLzUyMDU2MzMu/anBn",
+      "aliexpressUrl": "https://s.click.aliexpress.com/e/_c4Fwwg9R",
+      "research": {
+        "sourcing": [
+          {
+            "vendor": "Amazon",
+            "url": ""
+          },
+          {
+            "vendor": "AliExpress",
+            "url": "https://www.aliexpress.com/w/wholesale-micron-mt53d256m32d4pg-046-aat-b.html"
+          }
+        ]
+      },
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=Micron+MT53E256M32D2SP-046+AAT%3AB&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "amazonUrl": "https://www.amazon.com/s?k=Micron%20MT53D256M32D4PG-046%20AAT%3AB&tag=blueprintam-20",
+      "boundingBox": {
+        "width": 7.5,
+        "height": 1.1,
+        "depth": 10
+      },
+      "position3d": {
+        "x": 20,
+        "y": 20.55,
+        "z": 35
+      }
+    },
+    {
+      "id": "lpddr4_chip_2",
+      "name": "LPDDR4 Memory Chip 2",
+      "productName": "Micron MT53E256M32D2SP-046 AAT:B",
+      "category": "electrical",
+      "type": "module",
+      "pins": [
+        "DQ[64-95]",
+        "DQS",
+        "CK",
+        "CS",
+        "CA",
+        "CKE",
+        "ODT",
+        "RESET_N",
+        "VDD1/VDD2/VPP/VDDQ"
+      ],
+      "dimensions": "7.5x10x1.1mm",
+      "quantity": 1,
+      "estimatedCost": 20,
+      "purchaseUrl": "https://www.digikey.com/en/products/detail/micron-technology/MT53E256M32D2SP-046-AAT-B/6007421",
+      "partId": "4f2b1460-01ad-402f-bdca-ff7714a842cc",
+      "imageUrl": "https://imgs.search.brave.com/liWupq6_4_slwh2EbCGGGVkeOhIqHo6PsNTLA22uVhQ/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/bmV3YXJrLmNvbS9w/cm9kdWN0aW1hZ2Vz/L3N0YW5kYXJkL2Vu/X1VTLzUyMDU2MzMu/anBn",
+      "aliexpressUrl": "https://s.click.aliexpress.com/e/_c4Fwwg9R",
+      "research": {
+        "sourcing": [
+          {
+            "vendor": "Amazon",
+            "url": ""
+          },
+          {
+            "vendor": "AliExpress",
+            "url": "https://www.aliexpress.com/w/wholesale-micron-mt53d256m32d4pg-046-aat-b.html"
+          }
+        ]
+      },
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=Micron+MT53E256M32D2SP-046+AAT%3AB&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "amazonUrl": "https://www.amazon.com/s?k=Micron%20MT53D256M32D4PG-046%20AAT%3AB&tag=blueprintam-20",
+      "boundingBox": {
+        "width": 7.5,
+        "height": 1.1,
+        "depth": 10
+      },
+      "position3d": {
+        "x": 20,
+        "y": 20.55,
+        "z": 45
+      }
+    },
+    {
+      "id": "lpddr4_chip_3",
+      "name": "LPDDR4 Memory Chip 3",
+      "productName": "Micron MT53E256M32D2SP-046 AAT:B",
+      "category": "electrical",
+      "type": "module",
+      "pins": [
+        "DQ[96-127]",
+        "DQS",
+        "CK",
+        "CS",
+        "CA",
+        "CKE",
+        "ODT",
+        "RESET_N",
+        "VDD1/VDD2/VPP/VDDQ"
+      ],
+      "dimensions": "7.5x10x1.1mm",
+      "quantity": 1,
+      "estimatedCost": 20,
+      "purchaseUrl": "https://www.digikey.com/en/products/detail/micron-technology/MT53E256M32D2SP-046-AAT-B/6007421",
+      "partId": "4f2b1460-01ad-402f-bdca-ff7714a842cc",
+      "imageUrl": "https://imgs.search.brave.com/liWupq6_4_slwh2EbCGGGVkeOhIqHo6PsNTLA22uVhQ/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/bmV3YXJrLmNvbS9w/cm9kdWN0aW1hZ2Vz/L3N0YW5kYXJkL2Vu/X1VTLzUyMDU2MzMu/anBn",
+      "aliexpressUrl": "https://s.click.aliexpress.com/e/_c4Fwwg9R",
+      "research": {
+        "sourcing": [
+          {
+            "vendor": "Amazon",
+            "url": ""
+          },
+          {
+            "vendor": "AliExpress",
+            "url": "https://www.aliexpress.com/w/wholesale-micron-mt53d256m32d4pg-046-aat-b.html"
+          }
+        ]
+      },
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=Micron+MT53E256M32D2SP-046+AAT%3AB&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "boundingBox": {
+        "width": 7.5,
+        "height": 1.1,
+        "depth": 10
+      },
+      "position3d": {
+        "x": 20,
+        "y": 20.55,
+        "z": 55
+      }
+    },
+    {
+      "id": "hdmi_transmitter",
+      "name": "HDMI Transmitter",
+      "productName": "Analog Devices ADV7513",
+      "category": "electrical",
+      "type": "module",
+      "pins": [
+        "D[0-23]",
+        "HSYNC",
+        "VSYNC",
+        "DE",
+        "PCLK",
+        "I2C",
+        "TMDS_TX[0-2]",
+        "TMDS_CLK"
+      ],
+      "dimensions": "7x7x1mm",
+      "quantity": 1,
+      "estimatedCost": 12,
+      "purchaseUrl": "https://www.digikey.com/en/products/detail/analog-devices-inc/ADV7513KSTZ-110/3740923",
+      "partId": "76e70cdf-175b-484d-a3bd-39b2a3b254b9",
+      "description": "Converts parallel digital video/audio from MCU to HDMI output.",
+      "imageUrl": "https://m.media-amazon.com/images/I/317pkA7QoBL._SL500_.jpg",
+      "aliexpressUrl": "https://s.click.aliexpress.com/e/_c3kw39mz",
+      "research": {
+        "sourcing": [
+          {
+            "vendor": "Amazon",
+            "url": "https://www.amazon.com/dp/B075717LPZ?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+            "price": "$94.09"
+          },
+          {
+            "vendor": "AliExpress",
+            "url": "https://www.aliexpress.com/w/wholesale-analog-devices-adv7513.html"
+          },
+          {
+            "vendor": "Amazon",
+            "url": "https://www.amazon.com/dp/B0FSX7JNTP?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+            "price": "$42.56"
+          }
+        ]
+      },
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=Analog+Devices+ADV7513&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "amazonUrl": "https://www.amazon.com/dp/B075717LPZ?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+      "boundingBox": {
+        "width": 7,
+        "height": 1,
+        "depth": 7
+      },
+      "position3d": {
+        "x": 65,
+        "y": 20.5,
+        "z": 55
+      }
+    },
+    {
+      "id": "usb_c_pd_controller",
+      "name": "USB-C PD Controller",
+      "productName": "STMicroelectronics STUSB4500",
+      "category": "electrical",
+      "type": "module",
+      "pins": [
+        "CC1",
+        "CC2",
+        "VBUS",
+        "GND",
+        "I2C",
+        "ALERT_N",
+        "VOUT_CTRL"
+      ],
+      "dimensions": "4x4x0.6mm",
+      "quantity": 1,
+      "estimatedCost": 3.5,
+      "purchaseUrl": "https://www.digikey.com/en/products/detail/stmicroelectronics/STUSB4500QTR/6596956",
+      "partId": "7400f6d8-e0b2-411d-8699-24815d54af92",
+      "description": "Manages USB Type-C power delivery and data communication.",
+      "imageUrl": "https://imgs.search.brave.com/9n2iHgxsVH5LH_EVM1lq6SVSoG_7fAGRSqbaljxPPHI/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/Y2hhcmdlcmxhYi5j/b20vd3AtY29udGVu/dC91cGxvYWRzLzIw/MjQvMTAvMjAyNDEw/MTUwMTQ5MDgzNy53/ZWJw",
+      "aliexpressUrl": "https://s.click.aliexpress.com/e/_c3hAQiNJ",
+      "research": {
+        "sourcing": [
+          {
+            "vendor": "Amazon",
+            "url": ""
+          },
+          {
+            "vendor": "AliExpress",
+            "url": "https://www.aliexpress.com/w/wholesale-stmicroelectronics-stusb4500.html"
+          },
+          {
+            "vendor": "AliExpress",
+            "url": ""
+          }
+        ]
+      },
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=STMicroelectronics+STUSB4500&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "amazonUrl": "https://www.amazon.com/s?k=STMicroelectronics%20STUSB4500&tag=blueprintam-20",
+      "boundingBox": {
+        "width": 4,
+        "height": 0.6,
+        "depth": 4
+      },
+      "position3d": {
+        "x": 65,
+        "y": 20.3,
+        "z": 15
+      }
+    },
+    {
+      "id": "buck_converter_fpga_core",
+      "name": "FPGA Core Voltage Regulator",
+      "productName": "Analog Devices ADP5052ACPZ-R7 (for 1.1V, 1.2V)",
+      "category": "electrical",
+      "type": "power",
+      "pins": [
+        "VIN",
+        "VOUT",
+        "GND",
+        "FB",
+        "EN",
+        "SS"
+      ],
+      "dimensions": "5x5x0.85mm",
+      "quantity": 1,
+      "estimatedCost": 5,
+      "purchaseUrl": "https://www.digikey.com/en/products/detail/analog-devices-inc/ADP5052ACPZ-R7/2422532",
+      "partId": "3f1c2ccb-4745-4c28-a567-a8a528cac8ff",
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=Analog+Devices+ADP5052ACPZ-R7+%28for+1.1V%2C+1.2V%29&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "aliexpressUrl": "https://s.click.aliexpress.com/e/_c4DJiEiP",
+      "amazonUrl": "https://www.amazon.com/s?k=Analog%20Devices%20ADP5052ACPZ-R7%20(for%201.1V%2C%201.2V)&tag=blueprintam-20",
+      "imageUrl": "https://imgs.search.brave.com/92XIbPvz3QrvENTr1M65B6rIqPiPULO9GHMV8sA3O44/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/d2luLXNvdXJjZS5u/ZXQvY29udGVudC9p/bWFnZXMvdGh1bWJz/LzMyMTM3OTkuanBl/Zw",
+      "boundingBox": {
+        "width": 5,
+        "height": 0.85,
+        "depth": 5
+      },
+      "position3d": {
+        "x": 40,
+        "y": 20.425,
+        "z": 20
+      }
+    },
+    {
+      "id": "buck_converter_lpddr4_vdd1",
+      "name": "LPDDR4 VDD1/VDD2 Regulator",
+      "productName": "Texas Instruments TPS62130 (for 1.1V)",
+      "category": "electrical",
+      "type": "power",
+      "pins": [
+        "VIN",
+        "VOUT",
+        "GND",
+        "FB",
+        "EN"
+      ],
+      "dimensions": "3x3x1mm",
+      "quantity": 1,
+      "estimatedCost": 3,
+      "purchaseUrl": "https://www.digikey.com/en/products/detail/texas-instruments/TPS62130RGTR/2202677",
+      "partId": "9e4e6b98-5d99-44ed-b0b6-94a10fc8ddfe",
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=Texas+Instruments+TPS62130+%28for+1.1V%29&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "amazonUrl": "https://www.amazon.com/s?k=Texas%20Instruments%20TPS62130%20(for%201.1V)&tag=blueprintam-20",
+      "aliexpressUrl": "https://s.click.aliexpress.com/e/_c4NRCfIb",
+      "imageUrl": "https://imgs.search.brave.com/KzzU78N4LccKP2NKYSpk7TEwA-10iSDNTQPsE9nKJM8/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly93d3cu/b3ZhZ2EuY29tL2Zp/bGVzL3VwbG9hZHMv/cHJvZHVjdC9zLzM4/OWFkNmE4YTAxZjQ3/NmY5OGI5MTlmM2Rj/ZmU3MDZhLndlYnA",
+      "boundingBox": {
+        "width": 3,
+        "height": 1,
+        "depth": 3
+      },
+      "position3d": {
+        "x": 25,
+        "y": 20.5,
+        "z": 15
+      }
+    },
+    {
+      "id": "buck_converter_lpddr4_vddq",
+      "name": "LPDDR4 VDDQ Regulator",
+      "productName": "Texas Instruments TPS62130 (for 0.6V)",
+      "category": "electrical",
+      "type": "power",
+      "pins": [
+        "VIN",
+        "VOUT",
+        "GND",
+        "FB",
+        "EN"
+      ],
+      "dimensions": "3x3x1mm",
+      "quantity": 1,
+      "estimatedCost": 3,
+      "purchaseUrl": "https://www.digikey.com/en/products/detail/texas-instruments/TPS62130RGTR/2202677",
+      "partId": "5001f3fb-a1ee-45ab-921c-f88020b5577d",
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=Texas+Instruments+TPS62130+%28for+0.6V%29&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "aliexpressUrl": "https://s.click.aliexpress.com/e/_c2xXJKmR",
+      "amazonUrl": "https://www.amazon.com/s?k=Texas%20Instruments%20TPS62130%20(for%200.6V)&tag=blueprintam-20",
+      "imageUrl": "https://imgs.search.brave.com/TF8sxTsFiJW9zJTuDRjWaQaPbYamZ7BdPoPxobYaH7k/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMubGNzYy5jb20v/aW1hZ2VzL2xjc2Mv/OTAweDkwMC8yMDIz/MDMyNF9UZXhhcy1J/bnN0cnVtZW50cy1U/UFM2MjEzMFJHVFJf/QzQzNTkwX2Zyb250/LmpwZw",
+      "boundingBox": {
+        "width": 3,
+        "height": 1,
+        "depth": 3
+      },
+      "position3d": {
+        "x": 25,
+        "y": 20.5,
+        "z": 65
+      }
+    },
+    {
+      "id": "ldo_lpddr4_vpp",
+      "name": "LPDDR4 VPP Regulator",
+      "productName": "Analog Devices ADP1715-1.8 (for 1.8V)",
+      "category": "electrical",
+      "type": "power",
+      "pins": [
+        "VIN",
+        "VOUT",
+        "GND",
+        "EN"
+      ],
+      "dimensions": "2x2x0.75mm",
+      "quantity": 1,
+      "estimatedCost": 1.5,
+      "purchaseUrl": "https://www.digikey.com/en/products/detail/analog-devices-inc/ADP1715ARMZ-1-8-R7/2418578",
+      "partId": "2fe8772a-e59c-4852-8ef6-2ead4ea0c28d",
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=Analog+Devices+ADP1715-1.8+%28for+1.8V%29&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "aliexpressUrl": "https://s.click.aliexpress.com/e/_c3EJtKZV",
+      "amazonUrl": "https://www.amazon.com/dp/B011NOLU9Q?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+      "imageUrl": "https://m.media-amazon.com/images/I/31vp2YSHvkS._SL500_.jpg",
+      "boundingBox": {
+        "width": 2,
+        "height": 0.75,
+        "depth": 2
+      },
+      "position3d": {
+        "x": 25,
+        "y": 20.375,
+        "z": 20
+      }
+    },
+    {
+      "id": "buck_converter_fpga_io",
+      "name": "FPGA IO Voltage Regulator",
+      "productName": "Monolithic Power Systems MPQ4420",
+      "category": "electrical",
+      "type": "power",
+      "pins": [
+        "VIN",
+        "VOUT",
+        "GND",
+        "FB",
+        "EN"
+      ],
+      "dimensions": "3x3x0.9mm",
+      "quantity": 1,
+      "estimatedCost": 2.5,
+      "purchaseUrl": "https://www.digikey.com/en/products/detail/monolithic-power-systems/MPQ4420AGR-AEC1-Z/11883515",
+      "partId": "49b40b7b-2141-4850-84e4-50e43c4f6bca",
+      "imageUrl": "https://imgs.search.brave.com/e0CzkQf4A-CzQGf8nFO-u-x0txmQtBw6A1YpRituxvo/rs:fit:0:180:1:0/g:ce/aHR0cHM6Ly93d3cu/YWxsZGF0YXNoZWV0/LmNvbS9odG1sZGF0/YXNoZWV0LzEwMzMz/ODIvTVBTL01QUTQ0/MjAvMzgwLzIvTVBR/NDQyMC5naWY.jpeg",
+      "aliexpressUrl": "https://s.click.aliexpress.com/e/_c3MMjE2t",
+      "research": {
+        "sourcing": [
+          {
+            "vendor": "AliExpress",
+            "url": "https://www.aliexpress.com/w/wholesale-monolithic-power-systems-mpq4420.html"
+          }
+        ]
+      },
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=Monolithic+Power+Systems+MPQ4420&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "amazonUrl": "https://www.amazon.com/s?k=Monolithic%20Power%20Systems%20MPQ4420&tag=blueprintam-20",
+      "boundingBox": {
+        "width": 3,
+        "height": 0.9,
+        "depth": 3
+      },
+      "position3d": {
+        "x": 50,
+        "y": 20.45,
+        "z": 20
+      }
+    },
+    {
+      "id": "buck_converter_aux_3v3",
+      "name": "Auxiliary 3.3V Regulator",
+      "productName": "Monolithic Power Systems MPQ4420",
+      "category": "electrical",
+      "type": "power",
+      "pins": [
+        "VIN",
+        "VOUT",
+        "GND",
+        "FB",
+        "EN"
+      ],
+      "dimensions": "3x3x0.9mm",
+      "quantity": 1,
+      "estimatedCost": 2.5,
+      "purchaseUrl": "https://www.digikey.com/en/products/detail/monolithic-power-systems/MPQ4420AGR-AEC1-Z/11883515",
+      "partId": "49b40b7b-2141-4850-84e4-50e43c4f6bca",
+      "imageUrl": "https://imgs.search.brave.com/e0CzkQf4A-CzQGf8nFO-u-x0txmQtBw6A1YpRituxvo/rs:fit:0:180:1:0/g:ce/aHR0cHM6Ly93d3cu/YWxsZGF0YXNoZWV0/LmNvbS9odG1sZGF0/YXNoZWV0LzEwMzMz/ODIvTVBTL01QUTQ0/MjAvMzgwLzIvTVBR/NDQyMC5naWY.jpeg",
+      "aliexpressUrl": "https://s.click.aliexpress.com/e/_c3MMjE2t",
+      "research": {
+        "sourcing": [
+          {
+            "vendor": "AliExpress",
+            "url": "https://www.aliexpress.com/w/wholesale-monolithic-power-systems-mpq4420.html"
+          }
+        ]
+      },
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=Monolithic+Power+Systems+MPQ4420&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "amazonUrl": "https://www.amazon.com/s?k=Monolithic%20Power%20Systems%20MPQ4420&tag=blueprintam-20",
+      "boundingBox": {
+        "width": 3,
+        "height": 0.9,
+        "depth": 3
+      },
+      "position3d": {
+        "x": 50,
+        "y": 20.45,
+        "z": 65
+      }
+    },
+    {
+      "id": "usb_c_receptacle",
+      "name": "USB-C Power Input Receptacle",
+      "productName": "Amphenol ICC 12401665E50A",
+      "category": "electrical",
+      "type": "module",
+      "pins": [
+        "VBUS",
+        "GND",
+        "CC1",
+        "CC2",
+        "D+",
+        "D-"
+      ],
+      "dimensions": "10x5x3mm",
+      "quantity": 1,
+      "estimatedCost": 1.5,
+      "purchaseUrl": "https://www.digikey.com/en/products/detail/amphenol-icc/12401665E50A/7325514",
+      "partId": "a1e94b99-5f1a-4a1b-89a0-e269eeaad7db",
+      "imageUrl": "https://imgs.search.brave.com/Mmv2Zge3SNcvVtHbHKLXNxaSGzxEWim6uGR3f3RlmcY/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9tbS5k/aWdpa2V5LmNvbS9W/b2x1bWUwL29wYXNk/YXRhL2QyMjAwMDEv/bWVkaWFzL2ltYWdl/cy80OTAvMTI0MDE4/MjZFNDEyQS5qcGc",
+      "aliexpressUrl": "https://s.click.aliexpress.com/e/_c4t8XqTn",
+      "research": {
+        "sourcing": [
+          {
+            "vendor": "Amazon",
+            "url": ""
+          },
+          {
+            "vendor": "AliExpress",
+            "url": "https://www.aliexpress.com/w/wholesale-amphenol-12401662e40b.html"
+          }
+        ]
+      },
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=Amphenol+ICC+12401665E50A&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "amazonUrl": "https://www.amazon.com/s?k=Amphenol%2012401662E40B&tag=blueprintam-20",
+      "boundingBox": {
+        "width": 10,
+        "height": 3,
+        "depth": 5
+      },
+      "position3d": {
+        "x": 95,
+        "y": 20,
+        "z": 15
+      }
+    },
+    {
+      "id": "hdmi_type_a_receptacle",
+      "name": "HDMI Type-A Output Receptacle",
+      "productName": "Molex 0471510001",
+      "category": "electrical",
+      "type": "module",
+      "pins": [
+        "TMDS_DATA[0-2]+/-",
+        "TMDS_CLK+/-",
+        "DDC_SDA",
+        "DDC_SCL",
+        "CEC",
+        "Hot_Plug_Detect",
+        "PWR"
+      ],
+      "dimensions": "14x13x5mm",
+      "quantity": 1,
+      "estimatedCost": 1,
+      "purchaseUrl": "https://www.digikey.com/en/products/detail/molex/0471510001/479901",
+      "partId": "d37b7e31-924a-4b57-881f-592d857b9235",
+      "description": "Compact micro HDMI receptacle for display output.",
+      "imageUrl": "https://imgs.search.brave.com/atdv7fsHIX998b-BmmxWU_Ui9RNk4x4TYViwJsbS6gg/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9hc3Nl/dHMubW9sZXguY29t/L2lzL2ltYWdlL21v/bGV4L1JlY3Rhbmd1/bGFyLUhlcm8_dHM9/MTc3NTc0NTk3MTA2/NCZkcHI9b2Zm",
+      "aliexpressUrl": "https://s.click.aliexpress.com/e/_c4l3WWsd",
+      "research": {
+        "sourcing": [
+          {
+            "vendor": "AliExpress",
+            "url": "https://www.aliexpress.com/w/wholesale-molex-0471510001.html"
+          },
+          {
+            "vendor": "Amazon",
+            "url": ""
+          }
+        ]
+      },
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=Molex+0471510001&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "amazonUrl": "https://www.amazon.com/s?k=Molex%200471510001&tag=blueprintam-20",
+      "boundingBox": {
+        "width": 14,
+        "height": 5,
+        "depth": 13
+      },
+      "position3d": {
+        "x": 93,
+        "y": 20,
+        "z": 55
+      }
+    },
+    {
+      "id": "jtag_header",
+      "name": "JTAG Debug Header",
+      "productName": "Samtec TSW-105-07-G-D",
+      "category": "electrical",
+      "type": "module",
+      "pins": [
+        "TCK",
+        "TDI",
+        "TDO",
+        "TMS",
+        "nRESET",
+        "VREF",
+        "GND"
+      ],
+      "dimensions": "12.7x2.54x8mm",
+      "quantity": 1,
+      "estimatedCost": 0.8,
+      "purchaseUrl": "https://www.digikey.com/en/products/detail/samtec-inc/TSW-105-07-G-D/1099645",
+      "partId": "eecab8c7-1251-4639-a56e-2c93a4126b57",
+      "imageUrl": "https://imgs.search.brave.com/FclD0TuFmFBjdohxFMWOfkdxoOOeaKVJuc_GDx6qjzs/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9zYW10/ZWMtbWFya2V0aW5n/LWNkbi5henVyZWVk/Z2UubmV0L2tpbmV0/aWNpbWFnZXMvaW1h/Z2VzL3dlY2hhdGlj/b24uanBn",
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=Samtec+TSW-105-07-G-D&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "aliexpressUrl": "https://s.click.aliexpress.com/e/_c3YrQUzl",
+      "amazonUrl": "https://www.amazon.com/dp/B08X25TX2M?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+      "boundingBox": {
+        "width": 12.7,
+        "height": 8,
+        "depth": 2.54
+      },
+      "position3d": {
+        "x": 10,
+        "y": 20,
+        "z": 10
+      }
+    },
+    {
+      "id": "spi_nor_flash",
+      "name": "FPGA Configuration Flash",
+      "productName": "Winbond W25Q128FVSSIQ",
+      "category": "electrical",
+      "type": "module",
+      "pins": [
+        "CS#",
+        "DO",
+        "DI",
+        "CLK",
+        "WP#",
+        "HOLD#"
+      ],
+      "dimensions": "6x5x1.5mm",
+      "quantity": 1,
+      "estimatedCost": 2,
+      "purchaseUrl": "https://www.digikey.com/en/products/detail/winbond-electronics/W25Q128FVSSIQ/4301556",
+      "partId": "f0bedfb2-8fc0-4745-b166-505a9282d350",
+      "description": "SPI NOR flash memory for storing the GPU's firmware (VBIOS).",
+      "imageUrl": "https://m.media-amazon.com/images/I/41EVzXcOezL._SL500_.jpg",
+      "aliexpressUrl": "https://s.click.aliexpress.com/s/2YgDK2cRCyl9WNkj7vsiSgwQncOI32ZVsrEzbicWkRKbFTNMQbqbkcFOG1OBsMpz0QZ56yDUfJ22csduZdiHbgpEF7Ex3UKlAchlGNBsOXNNF88rwsDtIBwGctERXF9F8Kr7I88X0k96g6ZMhkO3P6ToLVxDdHRMGJpxZpIjxnmHAvyJtyadmk38EGe6i2o8G7iaV7tYZArmhfSTEi2pVyWdpS5Ka22Bg1szqfWcQUeNEjawjvRvXvFLTCW8qblr7wOZUa4C5MI6y0qLQDHLWOVtAJdfQPdNZVN5NXMyndb7vp2IqLBSyXOclU75rhpOwfzIocqMxPRA4ZuH0XuUTKGKEiaNZICdGUfFpJoJc7OObzsqxWWl7pdy236uy3MgSejWJREVc56qGKEr375NmjQuSyebDMIzssGm3DbYqZH7zj419IXtumgsIm25FxpvBQXDqdaM7SY531AiQ2fk8SSDoKB8oM9wQHITYeAGFZsbiGMg4b3oZZjEhBD7Rh7XQYahdikKJsA4SmYBEaPwQCLVUCFzz47GwioMWOfBcTO1W8RVlyqqTf54nxud5RJiKk4Y12I3SqclsGIwgOg5glhPa8Zt4h4Sqzn9uD6IyZ7l7Nakt8B8utvFQXVX21zUL0gUuPJO7XnfwygE5AYnz1ybPDvWvdUJ3C006jbpj9ylVJ1d111d3OpAEX7df0sy3AStAN923wCAIS0KIDcZTc9fjQ5PZug332wQJU8uwhY0c7RMIERuuqJf50euZNfrtWdndPxZZILzIFp6pKvdwjtR4tm6xbktDjtL1gE36DWYRl53mJCfGAfXoFEB3V7mejy6c5ju6ILRiX2HxZP6dpV64nGZ2HCCLXyQtWSv9RzLEwF4eALELKP4XmhMI04Ipd6CKNM1R4xhfFxmRaCAUBpXiSQNku4FgVlFEqqsR9ULSlnOYV",
+      "research": {
+        "sourcing": [
+          {
+            "vendor": "Amazon",
+            "url": "https://www.amazon.com/dp/B082WJM99Y?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+            "price": "$3.77"
+          },
+          {
+            "vendor": "AliExpress",
+            "url": "https://www.aliexpress.com/item/32816037241.html?pdp_npi=6%40dis%21USD%218.60%218.60%21%21%218.60%218.60%21%40210152bd17795437032114485e0f54%2164669271984%21affd%21%21%21%211%210%21",
+            "price": "$8.6"
+          }
+        ]
+      },
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=Winbond+W25Q128FVSSIQ&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "amazonUrl": "https://www.amazon.com/dp/B082WJM99Y?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+      "boundingBox": {
+        "width": 6,
+        "height": 1.5,
+        "depth": 5
+      },
+      "position3d": {
+        "x": 45,
+        "y": 20.75,
+        "z": 45
+      }
+    },
+    {
+      "id": "pcb_standoff_corner_fl",
+      "name": "PCB Standoff (Front-Left)",
+      "productName": "M3x10mm Brass Hex Standoff",
+      "category": "mechanical",
+      "type": "misc",
+      "description": "Standoff for mounting the PCB to a base plate or bottom enclosure.",
+      "dimensions": "M3x10mm",
+      "quantity": 1,
+      "estimatedCost": 0.25,
+      "purchaseUrl": "https://www.amazon.com/dp/B083GM48C1?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+      "partId": "3ec31d51-c51e-4ed8-bceb-f6462e3a87e6",
+      "material": "Brass",
+      "imageUrl": "https://m.media-amazon.com/images/I/41gcWWw0NVL._SL500_.jpg",
+      "aliexpressUrl": "https://s.click.aliexpress.com/e/_c3Zxl8cN",
+      "research": {
+        "sourcing": [
+          {
+            "vendor": "Amazon",
+            "url": "https://www.amazon.com/dp/B08F1X6ZL7?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+            "price": "$7.89"
+          },
+          {
+            "vendor": "AliExpress",
+            "url": "https://www.aliexpress.com/w/wholesale-m3x10mm-brass-hex-standoff.html"
+          },
+          {
+            "vendor": "Amazon",
+            "url": "https://www.amazon.com/dp/B083GM48C1?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+            "price": "$6.99"
+          }
+        ]
+      },
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=M3x10mm+Brass+Hex+Standoff&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "amazonUrl": "https://www.amazon.com/dp/B08F1X6ZL7?tag=blueprintam-20&linkCode=osi&th=1&psc=1"
+    },
+    {
+      "id": "pcb_standoff_corner_fr",
+      "name": "PCB Standoff (Front-Right)",
+      "productName": "M3x10mm Brass Hex Standoff",
+      "category": "mechanical",
+      "type": "misc",
+      "description": "Standoff for mounting the PCB to a base plate or bottom enclosure.",
+      "dimensions": "M3x10mm",
+      "quantity": 1,
+      "estimatedCost": 0.25,
+      "purchaseUrl": "https://www.amazon.com/dp/B083GM48C1?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+      "partId": "3ec31d51-c51e-4ed8-bceb-f6462e3a87e6",
+      "material": "Brass",
+      "imageUrl": "https://m.media-amazon.com/images/I/41gcWWw0NVL._SL500_.jpg",
+      "aliexpressUrl": "https://s.click.aliexpress.com/e/_c3Zxl8cN",
+      "research": {
+        "sourcing": [
+          {
+            "vendor": "Amazon",
+            "url": "https://www.amazon.com/dp/B08F1X6ZL7?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+            "price": "$7.89"
+          },
+          {
+            "vendor": "AliExpress",
+            "url": "https://www.aliexpress.com/w/wholesale-m3x10mm-brass-hex-standoff.html"
+          },
+          {
+            "vendor": "Amazon",
+            "url": "https://www.amazon.com/dp/B083GM48C1?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+            "price": "$6.99"
+          }
+        ]
+      },
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=M3x10mm+Brass+Hex+Standoff&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "amazonUrl": "https://www.amazon.com/dp/B08F1X6ZL7?tag=blueprintam-20&linkCode=osi&th=1&psc=1"
+    },
+    {
+      "id": "pcb_standoff_corner_bl",
+      "name": "PCB Standoff (Back-Left)",
+      "productName": "M3x10mm Brass Hex Standoff",
+      "category": "mechanical",
+      "type": "misc",
+      "description": "Standoff for mounting the PCB to a base plate or bottom enclosure.",
+      "dimensions": "M3x10mm",
+      "quantity": 1,
+      "estimatedCost": 0.25,
+      "purchaseUrl": "https://www.amazon.com/dp/B083GM48C1?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+      "partId": "3ec31d51-c51e-4ed8-bceb-f6462e3a87e6",
+      "material": "Brass",
+      "imageUrl": "https://m.media-amazon.com/images/I/41gcWWw0NVL._SL500_.jpg",
+      "aliexpressUrl": "https://s.click.aliexpress.com/e/_c3Zxl8cN",
+      "research": {
+        "sourcing": [
+          {
+            "vendor": "Amazon",
+            "url": "https://www.amazon.com/dp/B08F1X6ZL7?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+            "price": "$7.89"
+          },
+          {
+            "vendor": "AliExpress",
+            "url": "https://www.aliexpress.com/w/wholesale-m3x10mm-brass-hex-standoff.html"
+          },
+          {
+            "vendor": "Amazon",
+            "url": "https://www.amazon.com/dp/B083GM48C1?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+            "price": "$6.99"
+          }
+        ]
+      },
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=M3x10mm+Brass+Hex+Standoff&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "amazonUrl": "https://www.amazon.com/dp/B08F1X6ZL7?tag=blueprintam-20&linkCode=osi&th=1&psc=1"
+    },
+    {
+      "id": "pcb_standoff_corner_br",
+      "name": "PCB Standoff (Back-Right)",
+      "productName": "M3x10mm Brass Hex Standoff",
+      "category": "mechanical",
+      "type": "misc",
+      "description": "Standoff for mounting the PCB to a base plate or bottom enclosure.",
+      "dimensions": "M3x10mm",
+      "quantity": 1,
+      "estimatedCost": 0.25,
+      "purchaseUrl": "https://www.amazon.com/dp/B083GM48C1?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+      "partId": "3ec31d51-c51e-4ed8-bceb-f6462e3a87e6",
+      "material": "Brass",
+      "imageUrl": "https://m.media-amazon.com/images/I/41gcWWw0NVL._SL500_.jpg",
+      "aliexpressUrl": "https://s.click.aliexpress.com/e/_c3Zxl8cN",
+      "research": {
+        "sourcing": [
+          {
+            "vendor": "Amazon",
+            "url": "https://www.amazon.com/dp/B08F1X6ZL7?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+            "price": "$7.89"
+          },
+          {
+            "vendor": "AliExpress",
+            "url": "https://www.aliexpress.com/w/wholesale-m3x10mm-brass-hex-standoff.html"
+          },
+          {
+            "vendor": "Amazon",
+            "url": "https://www.amazon.com/dp/B083GM48C1?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+            "price": "$6.99"
+          }
+        ]
+      },
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=M3x10mm+Brass+Hex+Standoff&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "amazonUrl": "https://www.amazon.com/dp/B08F1X6ZL7?tag=blueprintam-20&linkCode=osi&th=1&psc=1"
+    },
+    {
+      "id": "m3_pcb_mounting_screws",
+      "name": "M3 PCB Mounting Screws",
+      "productName": "M3x6mm Pan Head Screws",
+      "category": "mechanical",
+      "type": "misc",
+      "description": "Screws for securing the PCB to the standoffs.",
+      "dimensions": "M3x6mm",
+      "quantity": 4,
+      "estimatedCost": 0.05,
+      "purchaseUrl": "https://s.click.aliexpress.com/s/fwx308cRD9Eny963e3KDdYxyIpNj8TXVr7saiF9Um5rMUg1kZtJALLnfa2LNXtiVgnxdD8Og6MmvwBoxhnSYQGM6r0c08U4TfX8DFGo7vviCuu3q62Q60OAhRZcqm3G8PtwM69xY7TOEWRrvulP5ukZQ4uQbBBtaVsdr6EffAqVmp3O5GyUANU2DoA3dJufNhDfh7KOlLgKIvRVhDxRESHLmea6fTE26gLUqKEUuuizJiLENrCbax94DZHDu8WhaXM9vQ86gzlqceNPO5w3vwXm4VrBF3x2lAMEl06wgNdTSMiT7cNG4HIdW0Jxgmy89HWc7QxDAbrvksPkUjWq8X2d4yhIh6uBYYeEn75GLm3vaiwNsFCHfkyCZjcXPNrgVhPYVNmXg798UWO4XGoCHs1ojp6M6UnWBO3CkHOM674q3Chx9S2MxGQMPKVOMaYwaXuCK2J7tY9kKH4rjo5ntE68KOvRewFYxAgUeCUsLDE8AP5bi53QflwJPvq9owr4GiTstFQStlEV0ltWLd0siJwYom40SpkG4108PJwghaYSdhZvHDgbBobOQUlLOZhWw6nRwQgDv8JnCvouXuZoVxYN7TsztEBjQKCwW2NOlBLm0dtR9dA97QjmtB1cGr5dphPSBrpEF4kp7ilfNNuFcKWqRbT04NzHQydDSeXXMlZNxZ74kTlkk8b5pglSr1UPspGZDSCZXcNLFPK1JHcLsMcc0PflBp9kyjBsi1zfu3HxvQphG2xEBJX7nIQRnU5d80rwPcPVLm96TGEEPdmmYXMd7QZh7yyei65q3ljMO6U8pJ63XkBhLeo5wy9rWMJH6KSDioLRWENBxNTVnIHVXJJir2Yr5iYPYLgoHkBweMnR2MnkiX3eso0RnXhSDhpF8fYBcuDs9WhWT8noeIlvY4S7VW8DP3TNavfknrTRoou1ej2TdqwOCvL86t0Y9M2qErP2Sqzhd7hYtRswChd",
+      "partId": "ee09a369-336a-4bdb-b96c-94c93c4fe103",
+      "material": "Steel",
+      "imageUrl": "https://m.media-amazon.com/images/I/51CXbHhv5uL._SL500_.jpg",
+      "aliexpressUrl": "https://s.click.aliexpress.com/s/fwx308cRD9Eny963e3KDdYxyIpNj8TXVr7saiF9Um5rMUg1kZtJALLnfa2LNXtiVgnxdD8Og6MmvwBoxhnSYQGM6r0c08U4TfX8DFGo7vviCuu3q62Q60OAhRZcqm3G8PtwM69xY7TOEWRrvulP5ukZQ4uQbBBtaVsdr6EffAqVmp3O5GyUANU2DoA3dJufNhDfh7KOlLgKIvRVhDxRESHLmea6fTE26gLUqKEUuuizJiLENrCbax94DZHDu8WhaXM9vQ86gzlqceNPO5w3vwXm4VrBF3x2lAMEl06wgNdTSMiT7cNG4HIdW0Jxgmy89HWc7QxDAbrvksPkUjWq8X2d4yhIh6uBYYeEn75GLm3vaiwNsFCHfkyCZjcXPNrgVhPYVNmXg798UWO4XGoCHs1ojp6M6UnWBO3CkHOM674q3Chx9S2MxGQMPKVOMaYwaXuCK2J7tY9kKH4rjo5ntE68KOvRewFYxAgUeCUsLDE8AP5bi53QflwJPvq9owr4GiTstFQStlEV0ltWLd0siJwYom40SpkG4108PJwghaYSdhZvHDgbBobOQUlLOZhWw6nRwQgDv8JnCvouXuZoVxYN7TsztEBjQKCwW2NOlBLm0dtR9dA97QjmtB1cGr5dphPSBrpEF4kp7ilfNNuFcKWqRbT04NzHQydDSeXXMlZNxZ74kTlkk8b5pglSr1UPspGZDSCZXcNLFPK1JHcLsMcc0PflBp9kyjBsi1zfu3HxvQphG2xEBJX7nIQRnU5d80rwPcPVLm96TGEEPdmmYXMd7QZh7yyei65q3ljMO6U8pJ63XkBhLeo5wy9rWMJH6KSDioLRWENBxNTVnIHVXJJir2Yr5iYPYLgoHkBweMnR2MnkiX3eso0RnXhSDhpF8fYBcuDs9WhWT8noeIlvY4S7VW8DP3TNavfknrTRoou1ej2TdqwOCvL86t0Y9M2qErP2Sqzhd7hYtRswChd",
+      "research": {
+        "sourcing": [
+          {
+            "vendor": "Amazon",
+            "url": "https://www.amazon.com/dp/B012TE12CY?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+            "price": "$5.29"
+          },
+          {
+            "vendor": "AliExpress",
+            "url": "https://www.aliexpress.com/item/1005010521766710.html?pdp_npi=6%40dis%21USD%213.95%213.95%21%21%213.95%213.95%21%4021013cc017793283916804858e0f15%2112000052684041583%21affd%21%21%21%211%210%21",
+            "price": "$3.95"
+          }
+        ],
+        "specs": [
+          {
+            "label": "material",
+            "value": "Steel"
+          },
+          {
+            "label": "head_type",
+            "value": "Pan Head"
+          },
+          {
+            "label": "length_mm",
+            "value": "6"
+          },
+          {
+            "label": "drive_type",
+            "value": "Phillips"
+          },
+          {
+            "label": "thread_size",
+            "value": "M3"
+          }
+        ]
+      },
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=M3x6mm+Pan+Head+Screws&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "amazonUrl": "https://www.amazon.com/dp/B012TE12CY?tag=blueprintam-20&linkCode=osi&th=1&psc=1"
+    },
+    {
+      "id": "bottom_enclosure_half",
+      "name": "Bottom Enclosure Half",
+      "category": "mechanical",
+      "type": "3d_printed",
+      "description": "Custom 3D-printed bottom enclosure half with mounting points for PCB standoffs and base.",
+      "dimensions": "100x70x20mm",
+      "material": "PETG",
+      "printSettings": "20% infill, 0.2mm layer",
+      "quantity": 1,
+      "estimatedCost": 5,
+      "purchaseUrl": "https://www.amazon.com/s?k=PETG+filament",
+      "boundingBox": {
+        "width": 100,
+        "height": 20,
+        "depth": 70
+      },
+      "position3d": {
+        "x": 50,
+        "y": 10,
+        "z": 35
+      }
+    },
+    {
+      "id": "top_enclosure_half",
+      "name": "Top Enclosure Half",
+      "category": "mechanical",
+      "type": "3d_printed",
+      "description": "Custom 3D-printed top enclosure half with cutouts for USB-C, HDMI, and ventilation.",
+      "dimensions": "100x70x15mm",
+      "material": "PETG",
+      "printSettings": "20% infill, 0.2mm layer",
+      "quantity": 1,
+      "estimatedCost": 4.5,
+      "purchaseUrl": "https://www.amazon.com/s?k=PETG+filament",
+      "boundingBox": {
+        "width": 100,
+        "height": 15,
+        "depth": 70
+      },
+      "position3d": {
+        "x": 50,
+        "y": 27.5,
+        "z": 35
+      }
+    },
+    {
+      "id": "enclosure_assembly_screws",
+      "name": "Enclosure Assembly Screws",
+      "productName": "M3x12mm Self-Tapping Screws",
+      "category": "mechanical",
+      "type": "misc",
+      "description": "Screws for joining the top and bottom enclosure halves.",
+      "dimensions": "M3x12mm",
+      "quantity": 4,
+      "estimatedCost": 0.08,
+      "purchaseUrl": "https://www.amazon.com/dp/B0FMXNHK8H?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+      "partId": "974bd0cd-3881-46c7-bff5-efcb7d05f0cd",
+      "imageUrl": "https://m.media-amazon.com/images/I/41OFQP9Q-8L._SL500_.jpg",
+      "aliexpressUrl": "https://s.click.aliexpress.com/e/_c3NC0T81",
+      "research": {
+        "sourcing": [
+          {
+            "vendor": "Amazon",
+            "url": "https://www.amazon.com/dp/B0CWNFYZFK?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+            "price": "$6.89"
+          },
+          {
+            "vendor": "AliExpress",
+            "url": "https://www.aliexpress.com/w/wholesale-m3x12mm-self-tapping-screws.html"
+          },
+          {
+            "vendor": "Amazon",
+            "url": "https://www.amazon.com/dp/B0FMXNHK8H?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+            "price": "$6.49"
+          },
+          {
+            "vendor": "Amazon",
+            "url": "https://www.amazon.com/dp/B0D9BDDYG3?tag=blueprintam-20&linkCode=osi&th=1&psc=1",
+            "price": "$7.69"
+          }
+        ]
+      },
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=M3x12mm+Self-Tapping+Screws&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "amazonUrl": "https://www.amazon.com/dp/B0CWNFYZFK?tag=blueprintam-20&linkCode=osi&th=1&psc=1"
+    },
+    {
+      "id": "heat_sink_fpga",
+      "name": "FPGA Heat Sink",
+      "productName": "15x15x8mm Adhesive Copper Heatsink",
+      "category": "mechanical",
+      "type": "misc",
+      "description": "Small copper heatsink with adhesive backing for thermal management of the FPGA.",
+      "dimensions": "15x15x8mm",
+      "mountsFor": "fpga_ecp5",
+      "quantity": 1,
+      "estimatedCost": 1.5,
+      "purchaseUrl": "https://www.amazon.com/s?k=15x15x8mm+copper+heatsink",
+      "partId": "c7a55920-6356-4663-ad75-c2418753698f",
+      "ebayUrl": "https://www.ebay.com/sch/i.html?_nkw=15x15x8mm+Adhesive+Copper+Heatsink&_sacat=0&_from=R40&mkcid=1&mkrid=711-53200-19255-0&siteid=0&campid=5339153059&customid=blueprint&toolid=10001&mkevt=1",
+      "aliexpressUrl": "https://s.click.aliexpress.com/e/_c3yzbFzv",
+      "amazonUrl": "https://www.amazon.com/dp/B0C7Z27Q3R?tag=blueprintam-20&linkCode=osi&th=1&psc=1"
+    },
+    {
+      "id": "lpddr4_chip_0_mount",
+      "name": "LPDDR4 Memory Chip 0 Mount",
+      "category": "mechanical",
+      "type": "3d_printed",
+      "mountsFor": "lpddr4_chip_0",
+      "description": "Adapter plate for the LPDDR4 Memory Chip 0 that bolts to the main chassis with M3 hardware. Includes wire-routing channels.",
+      "material": "PETG",
+      "printSettings": "30% infill, 0.2mm layer, 4 perimeters",
+      "quantity": 1,
+      "estimatedCost": 2,
+      "purchaseUrl": "",
+      "dimensions": "50x40x12mm",
+      "boundingBox": {
+        "width": 50,
+        "height": 12,
+        "depth": 40
+      },
+      "position3d": {
+        "x": 40,
+        "y": 16,
+        "z": 40
+      }
+    },
+    {
+      "id": "lpddr4_chip_1_mount",
+      "name": "LPDDR4 Memory Chip 1 Mount",
+      "category": "mechanical",
+      "type": "3d_printed",
+      "mountsFor": "lpddr4_chip_1",
+      "description": "Adapter plate for the LPDDR4 Memory Chip 1 that bolts to the main chassis with M3 hardware. Includes wire-routing channels.",
+      "material": "PETG",
+      "printSettings": "30% infill, 0.2mm layer, 4 perimeters",
+      "quantity": 1,
+      "estimatedCost": 2,
+      "purchaseUrl": "",
+      "dimensions": "50x40x12mm",
+      "boundingBox": {
+        "width": 50,
+        "height": 12,
+        "depth": 40
+      },
+      "position3d": {
+        "x": 40,
+        "y": 16,
+        "z": 40
+      }
+    },
+    {
+      "id": "lpddr4_chip_2_mount",
+      "name": "LPDDR4 Memory Chip 2 Mount",
+      "category": "mechanical",
+      "type": "3d_printed",
+      "mountsFor": "lpddr4_chip_2",
+      "description": "Adapter plate for the LPDDR4 Memory Chip 2 that bolts to the main chassis with M3 hardware. Includes wire-routing channels.",
+      "material": "PETG",
+      "printSettings": "30% infill, 0.2mm layer, 4 perimeters",
+      "quantity": 1,
+      "estimatedCost": 2,
+      "purchaseUrl": "",
+      "dimensions": "50x40x12mm",
+      "boundingBox": {
+        "width": 50,
+        "height": 12,
+        "depth": 40
+      },
+      "position3d": {
+        "x": 40,
+        "y": 16,
+        "z": 40
+      }
+    },
+    {
+      "id": "lpddr4_chip_3_mount",
+      "name": "LPDDR4 Memory Chip 3 Mount",
+      "category": "mechanical",
+      "type": "3d_printed",
+      "mountsFor": "lpddr4_chip_3",
+      "description": "Adapter plate for the LPDDR4 Memory Chip 3 that bolts to the main chassis with M3 hardware. Includes wire-routing channels.",
+      "material": "PETG",
+      "printSettings": "30% infill, 0.2mm layer, 4 perimeters",
+      "quantity": 1,
+      "estimatedCost": 2,
+      "purchaseUrl": "",
+      "dimensions": "50x40x12mm",
+      "boundingBox": {
+        "width": 50,
+        "height": 12,
+        "depth": 40
+      },
+      "position3d": {
+        "x": 40,
+        "y": 16,
+        "z": 40
+      }
+    },
+    {
+      "id": "hdmi_transmitter_mount",
+      "name": "HDMI Transmitter Mount",
+      "category": "mechanical",
+      "type": "3d_printed",
+      "mountsFor": "hdmi_transmitter",
+      "description": "Adapter plate for the HDMI Transmitter that bolts to the main chassis with M3 hardware. Includes wire-routing channels.",
+      "material": "PETG",
+      "printSettings": "30% infill, 0.2mm layer, 4 perimeters",
+      "quantity": 1,
+      "estimatedCost": 2,
+      "purchaseUrl": "",
+      "dimensions": "50x40x12mm",
+      "boundingBox": {
+        "width": 50,
+        "height": 12,
+        "depth": 40
+      },
+      "position3d": {
+        "x": 40,
+        "y": 16,
+        "z": 40
+      }
+    },
+    {
+      "id": "usb_c_pd_controller_mount",
+      "name": "USB-C PD Controller Mount",
+      "category": "mechanical",
+      "type": "3d_printed",
+      "mountsFor": "usb_c_pd_controller",
+      "description": "Adapter plate for the USB-C PD Controller that bolts to the main chassis with M3 hardware. Includes wire-routing channels.",
+      "material": "PETG",
+      "printSettings": "30% infill, 0.2mm layer, 4 perimeters",
+      "quantity": 1,
+      "estimatedCost": 2,
+      "purchaseUrl": "",
+      "dimensions": "50x40x12mm",
+      "boundingBox": {
+        "width": 50,
+        "height": 12,
+        "depth": 40
+      },
+      "position3d": {
+        "x": 40,
+        "y": 16,
+        "z": 40
+      }
+    },
+    {
+      "id": "usb_c_receptacle_mount",
+      "name": "USB-C Power Input Receptacle Mount",
+      "category": "mechanical",
+      "type": "3d_printed",
+      "mountsFor": "usb_c_receptacle",
+      "description": "Adapter plate for the USB-C Power Input Receptacle that bolts to the main chassis with M3 hardware. Includes wire-routing channels.",
+      "material": "PETG",
+      "printSettings": "30% infill, 0.2mm layer, 4 perimeters",
+      "quantity": 1,
+      "estimatedCost": 2,
+      "purchaseUrl": "",
+      "dimensions": "50x40x12mm",
+      "boundingBox": {
+        "width": 50,
+        "height": 12,
+        "depth": 40
+      },
+      "position3d": {
+        "x": 40,
+        "y": 16,
+        "z": 40
+      }
+    },
+    {
+      "id": "hdmi_type_a_receptacle_mount",
+      "name": "HDMI Type-A Output Receptacle Mount",
+      "category": "mechanical",
+      "type": "3d_printed",
+      "mountsFor": "hdmi_type_a_receptacle",
+      "description": "Adapter plate for the HDMI Type-A Output Receptacle that bolts to the main chassis with M3 hardware. Includes wire-routing channels.",
+      "material": "PETG",
+      "printSettings": "30% infill, 0.2mm layer, 4 perimeters",
+      "quantity": 1,
+      "estimatedCost": 2,
+      "purchaseUrl": "",
+      "dimensions": "50x40x12mm",
+      "boundingBox": {
+        "width": 50,
+        "height": 12,
+        "depth": 40
+      },
+      "position3d": {
+        "x": 40,
+        "y": 16,
+        "z": 40
+      }
+    },
+    {
+      "id": "jtag_header_mount",
+      "name": "JTAG Debug Header Mount",
+      "category": "mechanical",
+      "type": "3d_printed",
+      "mountsFor": "jtag_header",
+      "description": "Adapter plate for the JTAG Debug Header that bolts to the main chassis with M3 hardware. Includes wire-routing channels.",
+      "material": "PETG",
+      "printSettings": "30% infill, 0.2mm layer, 4 perimeters",
+      "quantity": 1,
+      "estimatedCost": 2,
+      "purchaseUrl": "",
+      "dimensions": "50x40x12mm",
+      "boundingBox": {
+        "width": 50,
+        "height": 12,
+        "depth": 40
+      },
+      "position3d": {
+        "x": 40,
+        "y": 16,
+        "z": 40
+      }
+    },
+    {
+      "id": "spi_nor_flash_mount",
+      "name": "FPGA Configuration Flash Mount",
+      "category": "mechanical",
+      "type": "3d_printed",
+      "mountsFor": "spi_nor_flash",
+      "description": "Adapter plate for the FPGA Configuration Flash that bolts to the main chassis with M3 hardware. Includes wire-routing channels.",
+      "material": "PETG",
+      "printSettings": "30% infill, 0.2mm layer, 4 perimeters",
+      "quantity": 1,
+      "estimatedCost": 2,
+      "purchaseUrl": "",
+      "dimensions": "50x40x12mm",
+      "boundingBox": {
+        "width": 50,
+        "height": 12,
+        "depth": 40
+      },
+      "position3d": {
+        "x": 40,
+        "y": 16,
+        "z": 40
+      }
+    }
+  ],
+  "electricalConnections": [
+    {
+      "source": "usb_c_receptacle",
+      "target": "usb_c_pd_controller",
+      "type": "data",
+      "protocol": "usb_cc",
+      "sourcePin": "CC1",
+      "targetPin": "CC1",
+      "label": "USB-C CC1"
+    },
+    {
+      "source": "usb_c_receptacle",
+      "target": "usb_c_pd_controller",
+      "type": "data",
+      "protocol": "usb_cc",
+      "sourcePin": "CC2",
+      "targetPin": "CC2",
+      "label": "USB-C CC2"
+    },
+    {
+      "source": "usb_c_receptacle",
+      "target": "usb_c_pd_controller",
+      "type": "power",
+      "voltage": "5V",
+      "current": "3A",
+      "label": "VBUS to PD Controller"
+    },
+    {
+      "source": "usb_c_pd_controller",
+      "target": "buck_converter_fpga_core",
+      "type": "power",
+      "voltage": "5V",
+      "current": "2A",
+      "label": "PD VOUT to FPGA Core Buck"
+    },
+    {
+      "source": "usb_c_pd_controller",
+      "target": "buck_converter_lpddr4_vdd1",
+      "type": "power",
+      "voltage": "5V",
+      "current": "1.5A",
+      "label": "PD VOUT to LPDDR4 VDD1 Buck"
+    },
+    {
+      "source": "usb_c_pd_controller",
+      "target": "buck_converter_lpddr4_vddq",
+      "type": "power",
+      "voltage": "5V",
+      "current": "1.5A",
+      "label": "PD VOUT to LPDDR4 VDDQ Buck"
+    },
+    {
+      "source": "usb_c_pd_controller",
+      "target": "ldo_lpddr4_vpp",
+      "type": "power",
+      "voltage": "5V",
+      "current": "100mA",
+      "label": "PD VOUT to LPDDR4 VPP LDO"
+    },
+    {
+      "source": "usb_c_pd_controller",
+      "target": "buck_converter_fpga_io",
+      "type": "power",
+      "voltage": "5V",
+      "current": "1A",
+      "label": "PD VOUT to FPGA IO Buck"
+    },
+    {
+      "source": "usb_c_pd_controller",
+      "target": "buck_converter_aux_3v3",
+      "type": "power",
+      "voltage": "5V",
+      "current": "500mA",
+      "label": "PD VOUT to Aux 3V3 Buck"
+    },
+    {
+      "source": "buck_converter_fpga_core",
+      "target": "fpga_ecp5",
+      "type": "power",
+      "voltage": "1.1V",
+      "current": "1.5A",
+      "label": "FPGA Core VCC"
+    },
+    {
+      "source": "buck_converter_lpddr4_vdd1",
+      "target": "lpddr4_chip_0",
+      "type": "power",
+      "voltage": "1.1V",
+      "current": "300mA",
+      "label": "LPDDR4_0 VDD1/VDD2"
+    },
+    {
+      "source": "buck_converter_lpddr4_vdd1",
+      "target": "lpddr4_chip_1",
+      "type": "power",
+      "voltage": "1.1V",
+      "current": "300mA",
+      "label": "LPDDR4_1 VDD1/VDD2"
+    },
+    {
+      "source": "buck_converter_lpddr4_vdd1",
+      "target": "lpddr4_chip_2",
+      "type": "power",
+      "voltage": "1.1V",
+      "current": "300mA",
+      "label": "LPDDR4_2 VDD1/VDD2"
+    },
+    {
+      "source": "buck_converter_lpddr4_vdd1",
+      "target": "lpddr4_chip_3",
+      "type": "power",
+      "voltage": "1.1V",
+      "current": "300mA",
+      "label": "LPDDR4_3 VDD1/VDD2"
+    },
+    {
+      "source": "buck_converter_lpddr4_vddq",
+      "target": "lpddr4_chip_0",
+      "type": "power",
+      "voltage": "0.6V",
+      "current": "500mA",
+      "label": "LPDDR4_0 VDDQ"
+    },
+    {
+      "source": "buck_converter_lpddr4_vddq",
+      "target": "lpddr4_chip_1",
+      "type": "power",
+      "voltage": "0.6V",
+      "current": "500mA",
+      "label": "LPDDR4_1 VDDQ"
+    },
+    {
+      "source": "buck_converter_lpddr4_vddq",
+      "target": "lpddr4_chip_2",
+      "type": "power",
+      "voltage": "0.6V",
+      "current": "500mA",
+      "label": "LPDDR4_2 VDDQ"
+    },
+    {
+      "source": "buck_converter_lpddr4_vddq",
+      "target": "lpddr4_chip_3",
+      "type": "power",
+      "voltage": "0.6V",
+      "current": "500mA",
+      "label": "LPDDR4_3 VDDQ"
+    },
+    {
+      "source": "ldo_lpddr4_vpp",
+      "target": "lpddr4_chip_0",
+      "type": "power",
+      "voltage": "1.8V",
+      "current": "20mA",
+      "label": "LPDDR4_0 VPP"
+    },
+    {
+      "source": "ldo_lpddr4_vpp",
+      "target": "lpddr4_chip_1",
+      "type": "power",
+      "voltage": "1.8V",
+      "current": "20mA",
+      "label": "LPDDR4_1 VPP"
+    },
+    {
+      "source": "ldo_lpddr4_vpp",
+      "target": "lpddr4_chip_2",
+      "type": "power",
+      "voltage": "1.8V",
+      "current": "20mA",
+      "label": "LPDDR4_2 VPP"
+    },
+    {
+      "source": "ldo_lpddr4_vpp",
+      "target": "lpddr4_chip_3",
+      "type": "power",
+      "voltage": "1.8V",
+      "current": "20mA",
+      "label": "LPDDR4_3 VPP"
+    },
+    {
+      "source": "buck_converter_fpga_io",
+      "target": "fpga_ecp5",
+      "type": "power",
+      "voltage": "2.5V",
+      "current": "500mA",
+      "label": "FPGA IO VCC"
+    },
+    {
+      "source": "buck_converter_aux_3v3",
+      "target": "hdmi_transmitter",
+      "type": "power",
+      "voltage": "3.3V",
+      "current": "100mA",
+      "label": "HDMI TX 3.3V"
+    },
+    {
+      "source": "buck_converter_aux_3v3",
+      "target": "spi_nor_flash",
+      "type": "power",
+      "voltage": "3.3V",
+      "current": "50mA",
+      "label": "SPI Flash 3.3V"
+    },
+    {
+      "source": "buck_converter_aux_3v3",
+      "target": "jtag_header",
+      "type": "power",
+      "voltage": "3.3V",
+      "current": "10mA",
+      "label": "JTAG VREF"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "lpddr4_chip_0",
+      "type": "data",
+      "protocol": "lpddr4",
+      "sourcePin": "LPDDR4_DATA[0-31]",
+      "targetPin": "DQ[0-31]",
+      "label": "LPDDR4 Chip 0 Data"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "lpddr4_chip_1",
+      "type": "data",
+      "protocol": "lpddr4",
+      "sourcePin": "LPDDR4_DATA[32-63]",
+      "targetPin": "DQ[32-63]",
+      "label": "LPDDR4 Chip 1 Data"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "lpddr4_chip_2",
+      "type": "data",
+      "protocol": "lpddr4",
+      "sourcePin": "LPDDR4_DATA[64-95]",
+      "targetPin": "DQ[64-95]",
+      "label": "LPDDR4 Chip 2 Data"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "lpddr4_chip_3",
+      "type": "data",
+      "protocol": "lpddr4",
+      "sourcePin": "LPDDR4_DATA[96-127]",
+      "targetPin": "DQ[96-127]",
+      "label": "LPDDR4 Chip 3 Data"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "lpddr4_chip_0",
+      "type": "data",
+      "protocol": "lpddr4",
+      "sourcePin": "LPDDR4_ADDR_CMD",
+      "targetPin": "CA",
+      "label": "LPDDR4 Chip 0 Addr/Cmd"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "lpddr4_chip_1",
+      "type": "data",
+      "protocol": "lpddr4",
+      "sourcePin": "LPDDR4_ADDR_CMD",
+      "targetPin": "CA",
+      "label": "LPDDR4 Chip 1 Addr/Cmd"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "lpddr4_chip_2",
+      "type": "data",
+      "protocol": "lpddr4",
+      "sourcePin": "LPDDR4_ADDR_CMD",
+      "targetPin": "CA",
+      "label": "LPDDR4 Chip 2 Addr/Cmd"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "lpddr4_chip_3",
+      "type": "data",
+      "protocol": "lpddr4",
+      "sourcePin": "LPDDR4_ADDR_CMD",
+      "targetPin": "CA",
+      "label": "LPDDR4 Chip 3 Addr/Cmd"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "lpddr4_chip_0",
+      "type": "data",
+      "protocol": "lpddr4",
+      "sourcePin": "LPDDR4_ADDR_CMD",
+      "targetPin": "CK",
+      "label": "LPDDR4 Chip 0 Clock"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "lpddr4_chip_1",
+      "type": "data",
+      "protocol": "lpddr4",
+      "sourcePin": "LPDDR4_ADDR_CMD",
+      "targetPin": "CK",
+      "label": "LPDDR4 Chip 1 Clock"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "lpddr4_chip_2",
+      "type": "data",
+      "protocol": "lpddr4",
+      "sourcePin": "LPDDR4_ADDR_CMD",
+      "targetPin": "CK",
+      "label": "LPDDR4 Chip 2 Clock"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "lpddr4_chip_3",
+      "type": "data",
+      "protocol": "lpddr4",
+      "sourcePin": "LPDDR4_ADDR_CMD",
+      "targetPin": "CK",
+      "label": "LPDDR4 Chip 3 Clock"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "lpddr4_chip_0",
+      "type": "data",
+      "protocol": "lpddr4",
+      "sourcePin": "GPIOs",
+      "targetPin": "CS",
+      "label": "LPDDR4 Chip 0 CS"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "lpddr4_chip_1",
+      "type": "data",
+      "protocol": "lpddr4",
+      "sourcePin": "GPIOs",
+      "targetPin": "CS",
+      "label": "LPDDR4 Chip 1 CS"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "lpddr4_chip_2",
+      "type": "data",
+      "protocol": "lpddr4",
+      "sourcePin": "GPIOs",
+      "targetPin": "CS",
+      "label": "LPDDR4 Chip 2 CS"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "lpddr4_chip_3",
+      "type": "data",
+      "protocol": "lpddr4",
+      "sourcePin": "GPIOs",
+      "targetPin": "CS",
+      "label": "LPDDR4 Chip 3 CS"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "hdmi_transmitter",
+      "type": "data",
+      "protocol": "gpio",
+      "sourcePin": "GPIOs",
+      "targetPin": "D[0-23]",
+      "label": "FPGA RGB Data to HDMI TX"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "hdmi_transmitter",
+      "type": "data",
+      "protocol": "gpio",
+      "sourcePin": "GPIOs",
+      "targetPin": "HSYNC",
+      "label": "FPGA HSYNC to HDMI TX"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "hdmi_transmitter",
+      "type": "data",
+      "protocol": "gpio",
+      "sourcePin": "GPIOs",
+      "targetPin": "VSYNC",
+      "label": "FPGA VSYNC to HDMI TX"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "hdmi_transmitter",
+      "type": "data",
+      "protocol": "gpio",
+      "sourcePin": "GPIOs",
+      "targetPin": "DE",
+      "label": "FPGA DE to HDMI TX"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "hdmi_transmitter",
+      "type": "data",
+      "protocol": "gpio",
+      "sourcePin": "GPIOs",
+      "targetPin": "PCLK",
+      "label": "FPGA PCLK to HDMI TX"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "hdmi_transmitter",
+      "type": "data",
+      "protocol": "i2c",
+      "sourcePin": "GPIOs",
+      "targetPin": "I2C",
+      "label": "FPGA I2C to HDMI TX"
+    },
+    {
+      "source": "hdmi_transmitter",
+      "target": "hdmi_type_a_receptacle",
+      "type": "data",
+      "protocol": "hdmi",
+      "sourcePin": "TMDS_TX[0-2]",
+      "targetPin": "TMDS_DATA[0-2]+/-",
+      "label": "HDMI TMDS Data"
+    },
+    {
+      "source": "hdmi_transmitter",
+      "target": "hdmi_type_a_receptacle",
+      "type": "data",
+      "protocol": "hdmi",
+      "sourcePin": "TMDS_CLK",
+      "targetPin": "TMDS_CLK+/-",
+      "label": "HDMI TMDS Clock"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "usb_c_pd_controller",
+      "type": "data",
+      "protocol": "i2c",
+      "sourcePin": "USB_C_PD_I2C",
+      "targetPin": "I2C",
+      "label": "FPGA I2C to PD Controller"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "jtag_header",
+      "type": "data",
+      "protocol": "jtag",
+      "sourcePin": "JTAG",
+      "targetPin": "TCK",
+      "label": "JTAG TCK"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "jtag_header",
+      "type": "data",
+      "protocol": "jtag",
+      "sourcePin": "JTAG",
+      "targetPin": "TDI",
+      "label": "JTAG TDI"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "jtag_header",
+      "type": "data",
+      "protocol": "jtag",
+      "sourcePin": "JTAG",
+      "targetPin": "TDO",
+      "label": "JTAG TDO"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "jtag_header",
+      "type": "data",
+      "protocol": "jtag",
+      "sourcePin": "JTAG",
+      "targetPin": "TMS",
+      "label": "JTAG TMS"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "spi_nor_flash",
+      "type": "data",
+      "protocol": "spi",
+      "sourcePin": "GPIOs",
+      "targetPin": "CS#",
+      "label": "FPGA SPI Flash CS"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "spi_nor_flash",
+      "type": "data",
+      "protocol": "spi",
+      "sourcePin": "GPIOs",
+      "targetPin": "DI",
+      "label": "FPGA SPI Flash DI"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "spi_nor_flash",
+      "type": "data",
+      "protocol": "spi",
+      "sourcePin": "GPIOs",
+      "targetPin": "DO",
+      "label": "FPGA SPI Flash DO"
+    },
+    {
+      "source": "fpga_ecp5",
+      "target": "spi_nor_flash",
+      "type": "data",
+      "protocol": "spi",
+      "sourcePin": "GPIOs",
+      "targetPin": "CLK",
+      "label": "FPGA SPI Flash CLK"
+    },
+    {
+      "source": "usb_c_receptacle",
+      "target": "usb_c_pd_controller",
+      "type": "power",
+      "sourcePin": "GND",
+      "targetPin": "GND"
+    },
+    {
+      "source": "usb_c_pd_controller",
+      "target": "buck_converter_fpga_core",
+      "type": "power",
+      "sourcePin": "GND",
+      "targetPin": "GND"
+    },
+    {
+      "source": "usb_c_pd_controller",
+      "target": "buck_converter_lpddr4_vdd1",
+      "type": "power",
+      "sourcePin": "GND",
+      "targetPin": "GND"
+    },
+    {
+      "source": "usb_c_pd_controller",
+      "target": "buck_converter_lpddr4_vddq",
+      "type": "power",
+      "sourcePin": "GND",
+      "targetPin": "GND"
+    },
+    {
+      "source": "usb_c_pd_controller",
+      "target": "ldo_lpddr4_vpp",
+      "type": "power",
+      "sourcePin": "GND",
+      "targetPin": "GND"
+    },
+    {
+      "source": "usb_c_pd_controller",
+      "target": "buck_converter_fpga_io",
+      "type": "power",
+      "sourcePin": "GND",
+      "targetPin": "GND"
+    },
+    {
+      "source": "usb_c_pd_controller",
+      "target": "buck_converter_aux_3v3",
+      "type": "power",
+      "sourcePin": "GND",
+      "targetPin": "GND"
+    },
+    {
+      "source": "buck_converter_aux_3v3",
+      "target": "jtag_header",
+      "type": "power",
+      "sourcePin": "GND",
+      "targetPin": "GND"
+    }
+  ],
+  "mechanicalConnections": [
+    {
+      "source": "pcb_standoff_corner_fl",
+      "target": "bottom_enclosure_half",
+      "label": "M3 screws"
+    },
+    {
+      "source": "pcb_standoff_corner_fr",
+      "target": "bottom_enclosure_half",
+      "label": "M3 screws"
+    },
+    {
+      "source": "pcb_standoff_corner_bl",
+      "target": "bottom_enclosure_half",
+      "label": "M3 screws"
+    },
+    {
+      "source": "pcb_standoff_corner_br",
+      "target": "bottom_enclosure_half",
+      "label": "M3 screws"
+    },
+    {
+      "source": "bottom_enclosure_half",
+      "target": "top_enclosure_half",
+      "label": "enclosure_assembly_screws"
+    },
+    {
+      "source": "lpddr4_chip_0_mount",
+      "target": "bottom_enclosure_half",
+      "label": "M2 screws"
+    },
+    {
+      "source": "lpddr4_chip_1_mount",
+      "target": "bottom_enclosure_half",
+      "label": "M2 screws"
+    },
+    {
+      "source": "lpddr4_chip_2_mount",
+      "target": "bottom_enclosure_half",
+      "label": "M2 screws"
+    },
+    {
+      "source": "lpddr4_chip_3_mount",
+      "target": "bottom_enclosure_half",
+      "label": "M2 screws"
+    },
+    {
+      "source": "hdmi_transmitter_mount",
+      "target": "bottom_enclosure_half",
+      "label": "M2 screws"
+    },
+    {
+      "source": "usb_c_pd_controller_mount",
+      "target": "bottom_enclosure_half",
+      "label": "M2 screws"
+    },
+    {
+      "source": "usb_c_receptacle_mount",
+      "target": "bottom_enclosure_half",
+      "label": "M2 screws"
+    },
+    {
+      "source": "hdmi_type_a_receptacle_mount",
+      "target": "bottom_enclosure_half",
+      "label": "M2 screws"
+    },
+    {
+      "source": "jtag_header_mount",
+      "target": "bottom_enclosure_half",
+      "label": "M2 screws"
+    },
+    {
+      "source": "spi_nor_flash_mount",
+      "target": "bottom_enclosure_half",
+      "label": "M2 screws"
+    },
+    {
+      "source": "heat_sink_fpga",
+      "target": "fpga_ecp5",
+      "label": "mount"
+    },
+    {
+      "source": "lpddr4_chip_0_mount",
+      "target": "lpddr4_chip_0",
+      "label": "mount"
+    },
+    {
+      "source": "lpddr4_chip_1_mount",
+      "target": "lpddr4_chip_1",
+      "label": "mount"
+    },
+    {
+      "source": "lpddr4_chip_2_mount",
+      "target": "lpddr4_chip_2",
+      "label": "mount"
+    },
+    {
+      "source": "lpddr4_chip_3_mount",
+      "target": "lpddr4_chip_3",
+      "label": "mount"
+    },
+    {
+      "source": "hdmi_transmitter_mount",
+      "target": "hdmi_transmitter",
+      "label": "mount"
+    },
+    {
+      "source": "usb_c_pd_controller_mount",
+      "target": "usb_c_pd_controller",
+      "label": "mount"
+    },
+    {
+      "source": "usb_c_receptacle_mount",
+      "target": "usb_c_receptacle",
+      "label": "mount"
+    },
+    {
+      "source": "hdmi_type_a_receptacle_mount",
+      "target": "hdmi_type_a_receptacle",
+      "label": "mount"
+    },
+    {
+      "source": "jtag_header_mount",
+      "target": "jtag_header",
+      "label": "mount"
+    },
+    {
+      "source": "spi_nor_flash_mount",
+      "target": "spi_nor_flash",
+      "label": "mount"
+    }
+  ],
+  "projectDescription": "An FPGA carrier board integrating a RISC-V FPGA with a 128-bit LPDDR4 memory bus. It includes USB-C for power input and an HDMI output for a GPU's display.",
+  "imagePromptSnapshot": {
+    "description": "Project idea: Design a carrier board for a RISC-V FPGA (like an ECP5 or Artix-7) that includes a 128-bit wide memory bus to an LPDDR4 chip, a USB-C power input, and an HDMI output for the GPU's display.\n\nDesign notes: RISC-V FPGA, 128-bit memory bus, LPDDR4 memory, USB-C power, HDMI output\n\nElectrical components (current): Main FPGA (mcu, 15x15x1mm); 10x module: LPDDR4 Memory Chip 0, LPDDR4 Memory Chip 1, LPDDR4 Memory Chip 2, LPDDR4 Memory Chip 3 +6 more; 6x power: FPGA Core Voltage Regulator, LPDDR4 VDD1/VDD2 Regulator, LPDDR4 VDDQ Regulator, LPDDR4 VPP Regulator +2 more\n\nMechanical/structural parts (current): 7x misc: PCB Standoff (Front-Left), PCB Standoff (Front-Right), PCB Standoff (Back-Left), PCB Standoff (Back-Right) +3 more; 12x 3d_printed: Bottom Enclosure Half, Top Enclosure Half, LPDDR4 Memory Chip 0 Mount, LPDDR4 Memory Chip 1 Mount +8 more\n\nAssembly: PCB Standoff (Front-Left) → Bottom Enclosure Half (M3 screws); PCB Standoff (Front-Right) → Bottom Enclosure Half (M3 screws); PCB Standoff (Back-Left) → Bottom Enclosure Half (M3 screws); PCB Standoff (Back-Right) → Bottom Enclosure Half (M3 screws); Bottom Enclosure Half → Top Enclosure Half (enclosure_assembly_screws); LPDDR4 Memory Chip 0 Mount → Bottom Enclosure Half (M2 screws); LPDDR4 Memory Chip 1 Mount → Bottom Enclosure Half (M2 screws); LPDDR4 Memory Chip 2 Mount → Bottom Enclosure Half (M2 screws); LPDDR4 Memory Chip 3 Mount → Bottom Enclosure Half (M2 screws); HDMI Transmitter Mount → Bottom Enclosure Half (M2 screws); USB-C PD Controller Mount → Bottom Enclosure Half (M2 screws); USB-C Power Input Receptacle Mount → Bottom Enclosure Half (M2 screws); HDMI Type-A Output Receptacle Mount → Bottom Enclosure Half (M2 screws); JTAG Debug Header Mount → Bottom Enclosure Half (M2 screws); FPGA Configuration Flash Mount → Bottom Enclosure Half (M2 screws) (+11 more connections)",
+    "tags": [
+      "RISC-V FPGA",
+      "128-bit memory bus",
+      "LPDDR4 memory",
+      "USB-C power",
+      "HDMI output"
+    ]
+  },
+  "originalPrompt": "Design a carrier board for a RISC-V FPGA (like an ECP5 or Artix-7) that includes a 128-bit wide memory bus to an LPDDR4 chip, a USB-C power input, and an HDMI output for the GPU's display.",
+  "plan": "- Core Electrical: RISC-V FPGA (Lattice ECP5 or Xilinx Artix-7), LPDDR4 memory ICs, HDMI transmitter IC, USB-C Power Delivery (PD) controller.\n- Power Management: Multiple DC-DC converters for FPGA core/IO, LPDDR4, and peripheral voltages; power sequencing circuitry.\n- Connectivity: USB-C receptacle for power input, HDMI Type-A receptacle for video output, JTAG/debug header, expansion headers (e.g., PMODs, GPIO).\n- Board Design: Multi-layer PCB (8-12 layers) with impedance-controlled routing for LPDDR4 data/address bus and HDMI differential pairs.\n- Mechanical: Custom PCB design, surface-mount and through-hole components, standoffs for mounting.",
+  "notes": [
+    "RISC-V FPGA",
+    "128-bit memory bus",
+    "LPDDR4 memory",
+    "USB-C power",
+    "HDMI output"
+  ],
+  "projectId": "bc9ddd75-2307-4c15-9532-7a0353a4afdd",
+  "mechLayoutHash": "bottom_enclosure_half:3d_printed:100x70x20mm,buck_converter_aux_3v3:power:3x3x0.9mm,buck_converter_fpga_core:power:5x5x0.85mm,buck_converter_fpga_io:power:3x3x0.9mm,buck_converter_lpddr4_vdd1:power:3x3x1mm,buck_converter_lpddr4_vddq:power:3x3x1mm,fpga_ecp5:mcu:15x15x1mm,hdmi_transmitter:module:7x7x1mm,hdmi_transmitter_mount:3d_printed:50x40x12mm,hdmi_type_a_receptacle:module:14x13x5mm,hdmi_type_a_receptacle_mount:3d_printed:50x40x12mm,jtag_header:module:12.7x2.54x8mm,jtag_header_mount:3d_printed:50x40x12mm,ldo_lpddr4_vpp:power:2x2x0.75mm,lpddr4_chip_0:module:7.5x10x1.1mm,lpddr4_chip_0_mount:3d_printed:50x40x12mm,lpddr4_chip_1:module:7.5x10x1.1mm,lpddr4_chip_1_mount:3d_printed:50x40x12mm,lpddr4_chip_2:module:7.5x10x1.1mm,lpddr4_chip_2_mount:3d_printed:50x40x12mm,lpddr4_chip_3:module:7.5x10x1.1mm,lpddr4_chip_3_mount:3d_printed:50x40x12mm,spi_nor_flash:module:6x5x1.5mm,spi_nor_flash_mount:3d_printed:50x40x12mm,top_enclosure_half:3d_printed:100x70x15mm,usb_c_pd_controller:module:4x4x0.6mm,usb_c_pd_controller_mount:3d_printed:50x40x12mm,usb_c_receptacle:module:10x5x3mm,usb_c_receptacle_mount:3d_printed:50x40x12mm::bottom_enclosure_half|top_enclosure_half;hdmi_transmitter_mount|bottom_enclosure_half;hdmi_transmitter_mount|hdmi_transmitter;hdmi_type_a_receptacle_mount|bottom_enclosure_half;hdmi_type_a_receptacle_mount|hdmi_type_a_receptacle;jtag_header_mount|bottom_enclosure_half;jtag_header_mount|jtag_header;lpddr4_chip_0_mount|bottom_enclosure_half;lpddr4_chip_0_mount|lpddr4_chip_0;lpddr4_chip_1_mount|bottom_enclosure_half;lpddr4_chip_1_mount|lpddr4_chip_1;lpddr4_chip_2_mount|bottom_enclosure_half;lpddr4_chip_2_mount|lpddr4_chip_2;lpddr4_chip_3_mount|bottom_enclosure_half;lpddr4_chip_3_mount|lpddr4_chip_3;spi_nor_flash_mount|bottom_enclosure_half;spi_nor_flash_mount|spi_nor_flash;usb_c_pd_controller_mount|bottom_enclosure_half;usb_c_pd_controller_mount|usb_c_pd_controller;usb_c_receptacle_mount|bottom_enclosure_half;usb_c_receptacle_mount|usb_c_receptacle",
+  "instructionPreamble": {
+    "tools": [
+      "3D printer (PETG capable)",
+      "Soldering iron with fine tip",
+      "Solder paste and flux",
+      "Hot air rework station",
+      "Solder wick and desoldering pump",
+      "Magnifying lamp or microscope",
+      "Multimeter with continuity test",
+      "M2 screwdriver",
+      "M3 hex key or screwdriver",
+      "Thermal paste or pad",
+      "Wire strippers and cutters",
+      "JTAG programmer/debugger"
+    ],
+    "assumptions": [
+      "Basic surface-mount soldering experience, including fine-pitch components",
+      "Familiarity with 3D printer operation and maintenance",
+      "Understanding of digital logic and embedded systems",
+      "Access to a host PC with FPGA development tools and drivers installed",
+      "USB-C Power Delivery (PD) compatible power supply for testing"
+    ]
+  },
+  "instructionSteps": [
+    {
+      "id": "fabricate",
+      "subSteps": [
+        {
+          "id": "fabricate_1",
+          "title": "3D print bottom and top enclosure halves",
+          "partIds": [
+            "bottom_enclosure_half",
+            "top_enclosure_half"
+          ]
+        },
+        {
+          "id": "fabricate_2",
+          "title": "3D print all LPDDR4 memory chip mounts",
+          "partIds": [
+            "lpddr4_chip_0_mount",
+            "lpddr4_chip_1_mount",
+            "lpddr4_chip_2_mount",
+            "lpddr4_chip_3_mount"
+          ]
+        },
+        {
+          "id": "fabricate_3",
+          "title": "3D print HDMI Transmitter and receptacle mounts",
+          "partIds": [
+            "hdmi_transmitter_mount",
+            "hdmi_type_a_receptacle_mount"
+          ]
+        },
+        {
+          "id": "fabricate_4",
+          "title": "3D print USB-C PD Controller and receptacle mounts",
+          "partIds": [
+            "usb_c_pd_controller_mount",
+            "usb_c_receptacle_mount"
+          ]
+        },
+        {
+          "id": "fabricate_5",
+          "title": "3D print JTAG Header and SPI Flash mounts",
+          "partIds": [
+            "jtag_header_mount",
+            "spi_nor_flash_mount"
+          ]
+        },
+        {
+          "id": "fabricate_6",
+          "title": "Inspect and deburr all 3D printed parts for optimal fit and clear openings",
+          "partIds": [
+            "bottom_enclosure_half",
+            "top_enclosure_half",
+            "lpddr4_chip_0_mount",
+            "lpddr4_chip_1_mount",
+            "lpddr4_chip_2_mount",
+            "lpddr4_chip_3_mount",
+            "hdmi_transmitter_mount",
+            "usb_c_pd_controller_mount",
+            "usb_c_receptacle_mount",
+            "hdmi_type_a_receptacle_mount",
+            "jtag_header_mount",
+            "spi_nor_flash_mount"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wire",
+      "subSteps": [
+        {
+          "id": "wire_1",
+          "title": "Solder FPGA (ECP5) to the PCB",
+          "partIds": [
+            "fpga_ecp5"
+          ]
+        },
+        {
+          "id": "wire_2",
+          "title": "Solder all LPDDR4 Memory Chips to the PCB",
+          "partIds": [
+            "lpddr4_chip_0",
+            "lpddr4_chip_1",
+            "lpddr4_chip_2",
+            "lpddr4_chip_3"
+          ]
+        },
+        {
+          "id": "wire_3",
+          "title": "Solder HDMI Transmitter and Configuration Flash to the PCB",
+          "partIds": [
+            "hdmi_transmitter",
+            "spi_nor_flash"
+          ]
+        },
+        {
+          "id": "wire_4",
+          "title": "Solder USB-C PD Controller and all voltage regulators to the PCB",
+          "partIds": [
+            "usb_c_pd_controller",
+            "buck_converter_fpga_core",
+            "buck_converter_lpddr4_vdd1",
+            "buck_converter_lpddr4_vddq",
+            "ldo_lpddr4_vpp",
+            "buck_converter_fpga_io",
+            "buck_converter_aux_3v3"
+          ]
+        },
+        {
+          "id": "wire_5",
+          "title": "Solder USB-C and HDMI Type-A receptacles, and JTAG header to the PCB",
+          "partIds": [
+            "usb_c_receptacle",
+            "hdmi_type_a_receptacle",
+            "jtag_header"
+          ]
+        },
+        {
+          "id": "wire_6",
+          "title": "Visually inspect all solder joints for bridges, shorts, and cold joints",
+          "partIds": [
+            "fpga_ecp5",
+            "lpddr4_chip_0",
+            "lpddr4_chip_1",
+            "lpddr4_chip_2",
+            "lpddr4_chip_3",
+            "hdmi_transmitter",
+            "usb_c_pd_controller",
+            "buck_converter_fpga_core",
+            "buck_converter_lpddr4_vdd1",
+            "buck_converter_lpddr4_vddq",
+            "ldo_lpddr4_vpp",
+            "buck_converter_fpga_io",
+            "buck_converter_aux_3v3",
+            "usb_c_receptacle",
+            "hdmi_type_a_receptacle",
+            "jtag_header",
+            "spi_nor_flash"
+          ]
+        },
+        {
+          "id": "wire_7",
+          "title": "Perform continuity checks on all power and ground rails to ensure no shorts",
+          "partIds": [
+            "fpga_ecp5",
+            "lpddr4_chip_0",
+            "lpddr4_chip_1",
+            "lpddr4_chip_2",
+            "lpddr4_chip_3",
+            "hdmi_transmitter",
+            "usb_c_pd_controller",
+            "buck_converter_fpga_core",
+            "buck_converter_lpddr4_vdd1",
+            "buck_converter_lpddr4_vddq",
+            "ldo_lpddr4_vpp",
+            "buck_converter_fpga_io",
+            "buck_converter_aux_3v3",
+            "usb_c_receptacle",
+            "hdmi_type_a_receptacle",
+            "jtag_header",
+            "spi_nor_flash"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "bringup",
+      "subSteps": [
+        {
+          "id": "bringup_1",
+          "title": "Apply initial power via USB-C and verify all regulator output voltages",
+          "partIds": [
+            "usb_c_receptacle",
+            "usb_c_pd_controller",
+            "buck_converter_fpga_core",
+            "buck_converter_lpddr4_vdd1",
+            "buck_converter_lpddr4_vddq",
+            "ldo_lpddr4_vpp",
+            "buck_converter_fpga_io",
+            "buck_converter_aux_3v3"
+          ]
+        },
+        {
+          "id": "bringup_2",
+          "title": "Connect JTAG programmer and verify FPGA recognition",
+          "partIds": [
+            "jtag_header",
+            "fpga_ecp5"
+          ]
+        },
+        {
+          "id": "bringup_3",
+          "title": "Program FPGA configuration flash with initial bootloader/test bitstream",
+          "partIds": [
+            "fpga_ecp5",
+            "spi_nor_flash"
+          ]
+        },
+        {
+          "id": "bringup_4",
+          "title": "Develop and load a basic test bitstream for LPDDR4 memory interface to verify connectivity",
+          "partIds": [
+            "fpga_ecp5",
+            "lpddr4_chip_0",
+            "lpddr4_chip_1",
+            "lpddr4_chip_2",
+            "lpddr4_chip_3"
+          ]
+        },
+        {
+          "id": "bringup_5",
+          "title": "Develop and load a basic test bitstream for HDMI output to verify display signal",
+          "partIds": [
+            "fpga_ecp5",
+            "hdmi_transmitter",
+            "hdmi_type_a_receptacle"
+          ]
+        },
+        {
+          "id": "bringup_6",
+          "title": "Verify I2C communication with USB-C PD controller and HDMI transmitter",
+          "partIds": [
+            "fpga_ecp5",
+            "usb_c_pd_controller",
+            "hdmi_transmitter"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "assemble",
+      "subSteps": [
+        {
+          "id": "assemble_1",
+          "title": "Mount the FPGA heat sink onto the FPGA with thermal paste/pad",
+          "partIds": [
+            "fpga_ecp5",
+            "heat_sink_fpga"
+          ]
+        },
+        {
+          "id": "assemble_2",
+          "title": "Mount all electrical components into their respective 3D printed mounts",
+          "partIds": [
+            "lpddr4_chip_0_mount",
+            "lpddr4_chip_0",
+            "lpddr4_chip_1_mount",
+            "lpddr4_chip_1",
+            "lpddr4_chip_2_mount",
+            "lpddr4_chip_2",
+            "lpddr4_chip_3_mount",
+            "lpddr4_chip_3",
+            "hdmi_transmitter_mount",
+            "hdmi_transmitter",
+            "usb_c_pd_controller_mount",
+            "usb_c_pd_controller",
+            "usb_c_receptacle_mount",
+            "usb_c_receptacle",
+            "hdmi_type_a_receptacle_mount",
+            "hdmi_type_a_receptacle",
+            "jtag_header_mount",
+            "jtag_header",
+            "spi_nor_flash_mount",
+            "spi_nor_flash"
+          ]
+        },
+        {
+          "id": "assemble_3",
+          "title": "Secure the PCB into the bottom enclosure half using PCB standoffs and M3 screws",
+          "partIds": [
+            "pcb_standoff_corner_fl",
+            "pcb_standoff_corner_fr",
+            "pcb_standoff_corner_bl",
+            "pcb_standoff_corner_br",
+            "bottom_enclosure_half",
+            "m3_pcb_mounting_screws"
+          ]
+        },
+        {
+          "id": "assemble_4",
+          "title": "Fasten all component mounts to the bottom enclosure half using M2 screws",
+          "partIds": [
+            "lpddr4_chip_0_mount",
+            "lpddr4_chip_1_mount",
+            "lpddr4_chip_2_mount",
+            "lpddr4_chip_3_mount",
+            "hdmi_transmitter_mount",
+            "usb_c_pd_controller_mount",
+            "usb_c_receptacle_mount",
+            "hdmi_type_a_receptacle_mount",
+            "jtag_header_mount",
+            "spi_nor_flash_mount",
+            "bottom_enclosure_half"
+          ]
+        },
+        {
+          "id": "assemble_5",
+          "title": "Attach the top enclosure half to the bottom enclosure half using assembly screws",
+          "partIds": [
+            "bottom_enclosure_half",
+            "top_enclosure_half",
+            "enclosure_assembly_screws"
+          ]
+        },
+        {
+          "id": "assemble_6",
+          "title": "Perform final system power-on and functional test to confirm stability and operation",
+          "partIds": [
+            "bottom_enclosure_half",
+            "top_enclosure_half"
+          ]
+        }
+      ]
+    }
+  ],
+  "wiringCleanedHash": "bc9ddd75-2307-4c15-9532-7a0353a4afdd::buck_converter_aux_3v3:VIN|VOUT|GND|FB|EN,buck_converter_fpga_core:VIN|VOUT|GND|FB|EN|SS,buck_converter_fpga_io:VIN|VOUT|GND|FB|EN,buck_converter_lpddr4_vdd1:VIN|VOUT|GND|FB|EN,buck_converter_lpddr4_vddq:VIN|VOUT|GND|FB|EN,fpga_ecp5:LPDDR4_DATA[0-127]|LPDDR4_ADDR_CMD|HDMI_TMDS[0-2]|HDMI_CLK|USB_C_PD_I2C|JTAG|GPIOs,hdmi_transmitter:D[0-23]|HSYNC|VSYNC|DE|PCLK|I2C|TMDS_TX[0-2]|TMDS_CLK,hdmi_type_a_receptacle:TMDS_DATA[0-2]+/-|TMDS_CLK+/-|DDC_SDA|DDC_SCL|CEC|Hot_Plug_Detect|PWR,jtag_header:TCK|TDI|TDO|TMS|nRESET|VREF|GND,ldo_lpddr4_vpp:VIN|VOUT|GND|EN,lpddr4_chip_0:DQ[0-31]|DQS|CK|CS|CA|CKE|ODT|RESET_N|VDD1/VDD2/VPP/VDDQ,lpddr4_chip_1:DQ[32-63]|DQS|CK|CS|CA|CKE|ODT|RESET_N|VDD1/VDD2/VPP/VDDQ,lpddr4_chip_2:DQ[64-95]|DQS|CK|CS|CA|CKE|ODT|RESET_N|VDD1/VDD2/VPP/VDDQ,lpddr4_chip_3:DQ[96-127]|DQS|CK|CS|CA|CKE|ODT|RESET_N|VDD1/VDD2/VPP/VDDQ,spi_nor_flash:CS#|DO|DI|CLK|WP#|HOLD#,usb_c_pd_controller:CC1|CC2|VBUS|GND|I2C|ALERT_N|VOUT_CTRL,usb_c_receptacle:VBUS|GND|CC1|CC2|D+|D-::data|fpga_ecp5|GPIOs|hdmi_transmitter|DE|gpio|;data|fpga_ecp5|GPIOs|hdmi_transmitter|D[0-23]|gpio|;data|fpga_ecp5|GPIOs|hdmi_transmitter|HSYNC|gpio|;data|fpga_ecp5|GPIOs|hdmi_transmitter|I2C|i2c|;data|fpga_ecp5|GPIOs|hdmi_transmitter|PCLK|gpio|;data|fpga_ecp5|GPIOs|hdmi_transmitter|VSYNC|gpio|;data|fpga_ecp5|GPIOs|lpddr4_chip_0|CS|lpddr4|;data|fpga_ecp5|GPIOs|lpddr4_chip_1|CS|lpddr4|;data|fpga_ecp5|GPIOs|lpddr4_chip_2|CS|lpddr4|;data|fpga_ecp5|GPIOs|lpddr4_chip_3|CS|lpddr4|;data|fpga_ecp5|GPIOs|spi_nor_flash|CLK|spi|;data|fpga_ecp5|GPIOs|spi_nor_flash|CS#|spi|;data|fpga_ecp5|GPIOs|spi_nor_flash|DI|spi|;data|fpga_ecp5|GPIOs|spi_nor_flash|DO|spi|;data|fpga_ecp5|JTAG|jtag_header|TCK|jtag|;data|fpga_ecp5|JTAG|jtag_header|TDI|jtag|;data|fpga_ecp5|JTAG|jtag_header|TDO|jtag|;data|fpga_ecp5|JTAG|jtag_header|TMS|jtag|;data|fpga_ecp5|LPDDR4_ADDR_CMD|lpddr4_chip_0|CA|lpddr4|;data|fpga_ecp5|LPDDR4_ADDR_CMD|lpddr4_chip_0|CK|lpddr4|;data|fpga_ecp5|LPDDR4_ADDR_CMD|lpddr4_chip_1|CA|lpddr4|;data|fpga_ecp5|LPDDR4_ADDR_CMD|lpddr4_chip_1|CK|lpddr4|;data|fpga_ecp5|LPDDR4_ADDR_CMD|lpddr4_chip_2|CA|lpddr4|;data|fpga_ecp5|LPDDR4_ADDR_CMD|lpddr4_chip_2|CK|lpddr4|;data|fpga_ecp5|LPDDR4_ADDR_CMD|lpddr4_chip_3|CA|lpddr4|;data|fpga_ecp5|LPDDR4_ADDR_CMD|lpddr4_chip_3|CK|lpddr4|;data|fpga_ecp5|LPDDR4_DATA[0-31]|lpddr4_chip_0|DQ[0-31]|lpddr4|;data|fpga_ecp5|LPDDR4_DATA[32-63]|lpddr4_chip_1|DQ[32-63]|lpddr4|;data|fpga_ecp5|LPDDR4_DATA[64-95]|lpddr4_chip_2|DQ[64-95]|lpddr4|;data|fpga_ecp5|LPDDR4_DATA[96-127]|lpddr4_chip_3|DQ[96-127]|lpddr4|;data|fpga_ecp5|USB_C_PD_I2C|usb_c_pd_controller|I2C|i2c|;data|hdmi_transmitter|TMDS_CLK|hdmi_type_a_receptacle|TMDS_CLK+/-|hdmi|;data|hdmi_transmitter|TMDS_TX[0-2]|hdmi_type_a_receptacle|TMDS_DATA[0-2]+/-|hdmi|;data|usb_c_receptacle|CC1|usb_c_pd_controller|CC1|usb_cc|;data|usb_c_receptacle|CC2|usb_c_pd_controller|CC2|usb_cc|;power|buck_converter_aux_3v3|GND|jtag_header|GND||;power|buck_converter_aux_3v3||hdmi_transmitter|||3.3V;power|buck_converter_aux_3v3||jtag_header|||3.3V;power|buck_converter_aux_3v3||spi_nor_flash|||3.3V;power|buck_converter_fpga_core||fpga_ecp5|||1.1V;power|buck_converter_fpga_io||fpga_ecp5|||2.5V;power|buck_converter_lpddr4_vdd1||lpddr4_chip_0|||1.1V;power|buck_converter_lpddr4_vdd1||lpddr4_chip_1|||1.1V;power|buck_converter_lpddr4_vdd1||lpddr4_chip_2|||1.1V;power|buck_converter_lpddr4_vdd1||lpddr4_chip_3|||1.1V;power|buck_converter_lpddr4_vddq||lpddr4_chip_0|||0.6V;power|buck_converter_lpddr4_vddq||lpddr4_chip_1|||0.6V;power|buck_converter_lpddr4_vddq||lpddr4_chip_2|||0.6V;power|buck_converter_lpddr4_vddq||lpddr4_chip_3|||0.6V;power|ldo_lpddr4_vpp||lpddr4_chip_0|||1.8V;power|ldo_lpddr4_vpp||lpddr4_chip_1|||1.8V;power|ldo_lpddr4_vpp||lpddr4_chip_2|||1.8V;power|ldo_lpddr4_vpp||lpddr4_chip_3|||1.8V;power|usb_c_pd_controller|GND|buck_converter_aux_3v3|GND||;power|usb_c_pd_controller|GND|buck_converter_fpga_core|GND||;power|usb_c_pd_controller|GND|buck_converter_fpga_io|GND||;power|usb_c_pd_controller|GND|buck_converter_lpddr4_vdd1|GND||;power|usb_c_pd_controller|GND|buck_converter_lpddr4_vddq|GND||;power|usb_c_pd_controller|GND|ldo_lpddr4_vpp|GND||;power|usb_c_pd_controller||buck_converter_aux_3v3|||5V;power|usb_c_pd_controller||buck_converter_fpga_core|||5V;power|usb_c_pd_controller||buck_converter_fpga_io|||5V;power|usb_c_pd_controller||buck_converter_lpddr4_vdd1|||5V;power|usb_c_pd_controller||buck_converter_lpddr4_vddq|||5V;power|usb_c_pd_controller||ldo_lpddr4_vpp|||5V;power|usb_c_receptacle|GND|usb_c_pd_controller|GND||;power|usb_c_receptacle||usb_c_pd_controller|||5V"
+}

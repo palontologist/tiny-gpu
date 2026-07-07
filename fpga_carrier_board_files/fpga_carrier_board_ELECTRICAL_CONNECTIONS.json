@@ -1,0 +1,565 @@
+[
+  {
+    "source": "usb_c_receptacle",
+    "target": "usb_c_pd_controller",
+    "type": "data",
+    "protocol": "usb_cc",
+    "sourcePin": "CC1",
+    "targetPin": "CC1",
+    "label": "USB-C CC1"
+  },
+  {
+    "source": "usb_c_receptacle",
+    "target": "usb_c_pd_controller",
+    "type": "data",
+    "protocol": "usb_cc",
+    "sourcePin": "CC2",
+    "targetPin": "CC2",
+    "label": "USB-C CC2"
+  },
+  {
+    "source": "usb_c_receptacle",
+    "target": "usb_c_pd_controller",
+    "type": "power",
+    "voltage": "5V",
+    "current": "3A",
+    "label": "VBUS to PD Controller"
+  },
+  {
+    "source": "usb_c_pd_controller",
+    "target": "buck_converter_fpga_core",
+    "type": "power",
+    "voltage": "5V",
+    "current": "2A",
+    "label": "PD VOUT to FPGA Core Buck"
+  },
+  {
+    "source": "usb_c_pd_controller",
+    "target": "buck_converter_lpddr4_vdd1",
+    "type": "power",
+    "voltage": "5V",
+    "current": "1.5A",
+    "label": "PD VOUT to LPDDR4 VDD1 Buck"
+  },
+  {
+    "source": "usb_c_pd_controller",
+    "target": "buck_converter_lpddr4_vddq",
+    "type": "power",
+    "voltage": "5V",
+    "current": "1.5A",
+    "label": "PD VOUT to LPDDR4 VDDQ Buck"
+  },
+  {
+    "source": "usb_c_pd_controller",
+    "target": "ldo_lpddr4_vpp",
+    "type": "power",
+    "voltage": "5V",
+    "current": "100mA",
+    "label": "PD VOUT to LPDDR4 VPP LDO"
+  },
+  {
+    "source": "usb_c_pd_controller",
+    "target": "buck_converter_fpga_io",
+    "type": "power",
+    "voltage": "5V",
+    "current": "1A",
+    "label": "PD VOUT to FPGA IO Buck"
+  },
+  {
+    "source": "usb_c_pd_controller",
+    "target": "buck_converter_aux_3v3",
+    "type": "power",
+    "voltage": "5V",
+    "current": "500mA",
+    "label": "PD VOUT to Aux 3V3 Buck"
+  },
+  {
+    "source": "buck_converter_fpga_core",
+    "target": "fpga_ecp5",
+    "type": "power",
+    "voltage": "1.1V",
+    "current": "1.5A",
+    "label": "FPGA Core VCC"
+  },
+  {
+    "source": "buck_converter_lpddr4_vdd1",
+    "target": "lpddr4_chip_0",
+    "type": "power",
+    "voltage": "1.1V",
+    "current": "300mA",
+    "label": "LPDDR4_0 VDD1/VDD2"
+  },
+  {
+    "source": "buck_converter_lpddr4_vdd1",
+    "target": "lpddr4_chip_1",
+    "type": "power",
+    "voltage": "1.1V",
+    "current": "300mA",
+    "label": "LPDDR4_1 VDD1/VDD2"
+  },
+  {
+    "source": "buck_converter_lpddr4_vdd1",
+    "target": "lpddr4_chip_2",
+    "type": "power",
+    "voltage": "1.1V",
+    "current": "300mA",
+    "label": "LPDDR4_2 VDD1/VDD2"
+  },
+  {
+    "source": "buck_converter_lpddr4_vdd1",
+    "target": "lpddr4_chip_3",
+    "type": "power",
+    "voltage": "1.1V",
+    "current": "300mA",
+    "label": "LPDDR4_3 VDD1/VDD2"
+  },
+  {
+    "source": "buck_converter_lpddr4_vddq",
+    "target": "lpddr4_chip_0",
+    "type": "power",
+    "voltage": "0.6V",
+    "current": "500mA",
+    "label": "LPDDR4_0 VDDQ"
+  },
+  {
+    "source": "buck_converter_lpddr4_vddq",
+    "target": "lpddr4_chip_1",
+    "type": "power",
+    "voltage": "0.6V",
+    "current": "500mA",
+    "label": "LPDDR4_1 VDDQ"
+  },
+  {
+    "source": "buck_converter_lpddr4_vddq",
+    "target": "lpddr4_chip_2",
+    "type": "power",
+    "voltage": "0.6V",
+    "current": "500mA",
+    "label": "LPDDR4_2 VDDQ"
+  },
+  {
+    "source": "buck_converter_lpddr4_vddq",
+    "target": "lpddr4_chip_3",
+    "type": "power",
+    "voltage": "0.6V",
+    "current": "500mA",
+    "label": "LPDDR4_3 VDDQ"
+  },
+  {
+    "source": "ldo_lpddr4_vpp",
+    "target": "lpddr4_chip_0",
+    "type": "power",
+    "voltage": "1.8V",
+    "current": "20mA",
+    "label": "LPDDR4_0 VPP"
+  },
+  {
+    "source": "ldo_lpddr4_vpp",
+    "target": "lpddr4_chip_1",
+    "type": "power",
+    "voltage": "1.8V",
+    "current": "20mA",
+    "label": "LPDDR4_1 VPP"
+  },
+  {
+    "source": "ldo_lpddr4_vpp",
+    "target": "lpddr4_chip_2",
+    "type": "power",
+    "voltage": "1.8V",
+    "current": "20mA",
+    "label": "LPDDR4_2 VPP"
+  },
+  {
+    "source": "ldo_lpddr4_vpp",
+    "target": "lpddr4_chip_3",
+    "type": "power",
+    "voltage": "1.8V",
+    "current": "20mA",
+    "label": "LPDDR4_3 VPP"
+  },
+  {
+    "source": "buck_converter_fpga_io",
+    "target": "fpga_ecp5",
+    "type": "power",
+    "voltage": "2.5V",
+    "current": "500mA",
+    "label": "FPGA IO VCC"
+  },
+  {
+    "source": "buck_converter_aux_3v3",
+    "target": "hdmi_transmitter",
+    "type": "power",
+    "voltage": "3.3V",
+    "current": "100mA",
+    "label": "HDMI TX 3.3V"
+  },
+  {
+    "source": "buck_converter_aux_3v3",
+    "target": "spi_nor_flash",
+    "type": "power",
+    "voltage": "3.3V",
+    "current": "50mA",
+    "label": "SPI Flash 3.3V"
+  },
+  {
+    "source": "buck_converter_aux_3v3",
+    "target": "jtag_header",
+    "type": "power",
+    "voltage": "3.3V",
+    "current": "10mA",
+    "label": "JTAG VREF"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "lpddr4_chip_0",
+    "type": "data",
+    "protocol": "lpddr4",
+    "sourcePin": "LPDDR4_DATA[0-31]",
+    "targetPin": "DQ[0-31]",
+    "label": "LPDDR4 Chip 0 Data"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "lpddr4_chip_1",
+    "type": "data",
+    "protocol": "lpddr4",
+    "sourcePin": "LPDDR4_DATA[32-63]",
+    "targetPin": "DQ[32-63]",
+    "label": "LPDDR4 Chip 1 Data"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "lpddr4_chip_2",
+    "type": "data",
+    "protocol": "lpddr4",
+    "sourcePin": "LPDDR4_DATA[64-95]",
+    "targetPin": "DQ[64-95]",
+    "label": "LPDDR4 Chip 2 Data"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "lpddr4_chip_3",
+    "type": "data",
+    "protocol": "lpddr4",
+    "sourcePin": "LPDDR4_DATA[96-127]",
+    "targetPin": "DQ[96-127]",
+    "label": "LPDDR4 Chip 3 Data"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "lpddr4_chip_0",
+    "type": "data",
+    "protocol": "lpddr4",
+    "sourcePin": "LPDDR4_ADDR_CMD",
+    "targetPin": "CA",
+    "label": "LPDDR4 Chip 0 Addr/Cmd"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "lpddr4_chip_1",
+    "type": "data",
+    "protocol": "lpddr4",
+    "sourcePin": "LPDDR4_ADDR_CMD",
+    "targetPin": "CA",
+    "label": "LPDDR4 Chip 1 Addr/Cmd"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "lpddr4_chip_2",
+    "type": "data",
+    "protocol": "lpddr4",
+    "sourcePin": "LPDDR4_ADDR_CMD",
+    "targetPin": "CA",
+    "label": "LPDDR4 Chip 2 Addr/Cmd"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "lpddr4_chip_3",
+    "type": "data",
+    "protocol": "lpddr4",
+    "sourcePin": "LPDDR4_ADDR_CMD",
+    "targetPin": "CA",
+    "label": "LPDDR4 Chip 3 Addr/Cmd"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "lpddr4_chip_0",
+    "type": "data",
+    "protocol": "lpddr4",
+    "sourcePin": "LPDDR4_ADDR_CMD",
+    "targetPin": "CK",
+    "label": "LPDDR4 Chip 0 Clock"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "lpddr4_chip_1",
+    "type": "data",
+    "protocol": "lpddr4",
+    "sourcePin": "LPDDR4_ADDR_CMD",
+    "targetPin": "CK",
+    "label": "LPDDR4 Chip 1 Clock"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "lpddr4_chip_2",
+    "type": "data",
+    "protocol": "lpddr4",
+    "sourcePin": "LPDDR4_ADDR_CMD",
+    "targetPin": "CK",
+    "label": "LPDDR4 Chip 2 Clock"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "lpddr4_chip_3",
+    "type": "data",
+    "protocol": "lpddr4",
+    "sourcePin": "LPDDR4_ADDR_CMD",
+    "targetPin": "CK",
+    "label": "LPDDR4 Chip 3 Clock"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "lpddr4_chip_0",
+    "type": "data",
+    "protocol": "lpddr4",
+    "sourcePin": "GPIOs",
+    "targetPin": "CS",
+    "label": "LPDDR4 Chip 0 CS"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "lpddr4_chip_1",
+    "type": "data",
+    "protocol": "lpddr4",
+    "sourcePin": "GPIOs",
+    "targetPin": "CS",
+    "label": "LPDDR4 Chip 1 CS"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "lpddr4_chip_2",
+    "type": "data",
+    "protocol": "lpddr4",
+    "sourcePin": "GPIOs",
+    "targetPin": "CS",
+    "label": "LPDDR4 Chip 2 CS"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "lpddr4_chip_3",
+    "type": "data",
+    "protocol": "lpddr4",
+    "sourcePin": "GPIOs",
+    "targetPin": "CS",
+    "label": "LPDDR4 Chip 3 CS"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "hdmi_transmitter",
+    "type": "data",
+    "protocol": "gpio",
+    "sourcePin": "GPIOs",
+    "targetPin": "D[0-23]",
+    "label": "FPGA RGB Data to HDMI TX"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "hdmi_transmitter",
+    "type": "data",
+    "protocol": "gpio",
+    "sourcePin": "GPIOs",
+    "targetPin": "HSYNC",
+    "label": "FPGA HSYNC to HDMI TX"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "hdmi_transmitter",
+    "type": "data",
+    "protocol": "gpio",
+    "sourcePin": "GPIOs",
+    "targetPin": "VSYNC",
+    "label": "FPGA VSYNC to HDMI TX"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "hdmi_transmitter",
+    "type": "data",
+    "protocol": "gpio",
+    "sourcePin": "GPIOs",
+    "targetPin": "DE",
+    "label": "FPGA DE to HDMI TX"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "hdmi_transmitter",
+    "type": "data",
+    "protocol": "gpio",
+    "sourcePin": "GPIOs",
+    "targetPin": "PCLK",
+    "label": "FPGA PCLK to HDMI TX"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "hdmi_transmitter",
+    "type": "data",
+    "protocol": "i2c",
+    "sourcePin": "GPIOs",
+    "targetPin": "I2C",
+    "label": "FPGA I2C to HDMI TX"
+  },
+  {
+    "source": "hdmi_transmitter",
+    "target": "hdmi_type_a_receptacle",
+    "type": "data",
+    "protocol": "hdmi",
+    "sourcePin": "TMDS_TX[0-2]",
+    "targetPin": "TMDS_DATA[0-2]+/-",
+    "label": "HDMI TMDS Data"
+  },
+  {
+    "source": "hdmi_transmitter",
+    "target": "hdmi_type_a_receptacle",
+    "type": "data",
+    "protocol": "hdmi",
+    "sourcePin": "TMDS_CLK",
+    "targetPin": "TMDS_CLK+/-",
+    "label": "HDMI TMDS Clock"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "usb_c_pd_controller",
+    "type": "data",
+    "protocol": "i2c",
+    "sourcePin": "USB_C_PD_I2C",
+    "targetPin": "I2C",
+    "label": "FPGA I2C to PD Controller"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "jtag_header",
+    "type": "data",
+    "protocol": "jtag",
+    "sourcePin": "JTAG",
+    "targetPin": "TCK",
+    "label": "JTAG TCK"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "jtag_header",
+    "type": "data",
+    "protocol": "jtag",
+    "sourcePin": "JTAG",
+    "targetPin": "TDI",
+    "label": "JTAG TDI"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "jtag_header",
+    "type": "data",
+    "protocol": "jtag",
+    "sourcePin": "JTAG",
+    "targetPin": "TDO",
+    "label": "JTAG TDO"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "jtag_header",
+    "type": "data",
+    "protocol": "jtag",
+    "sourcePin": "JTAG",
+    "targetPin": "TMS",
+    "label": "JTAG TMS"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "spi_nor_flash",
+    "type": "data",
+    "protocol": "spi",
+    "sourcePin": "GPIOs",
+    "targetPin": "CS#",
+    "label": "FPGA SPI Flash CS"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "spi_nor_flash",
+    "type": "data",
+    "protocol": "spi",
+    "sourcePin": "GPIOs",
+    "targetPin": "DI",
+    "label": "FPGA SPI Flash DI"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "spi_nor_flash",
+    "type": "data",
+    "protocol": "spi",
+    "sourcePin": "GPIOs",
+    "targetPin": "DO",
+    "label": "FPGA SPI Flash DO"
+  },
+  {
+    "source": "fpga_ecp5",
+    "target": "spi_nor_flash",
+    "type": "data",
+    "protocol": "spi",
+    "sourcePin": "GPIOs",
+    "targetPin": "CLK",
+    "label": "FPGA SPI Flash CLK"
+  },
+  {
+    "source": "usb_c_receptacle",
+    "target": "usb_c_pd_controller",
+    "type": "power",
+    "sourcePin": "GND",
+    "targetPin": "GND"
+  },
+  {
+    "source": "usb_c_pd_controller",
+    "target": "buck_converter_fpga_core",
+    "type": "power",
+    "sourcePin": "GND",
+    "targetPin": "GND"
+  },
+  {
+    "source": "usb_c_pd_controller",
+    "target": "buck_converter_lpddr4_vdd1",
+    "type": "power",
+    "sourcePin": "GND",
+    "targetPin": "GND"
+  },
+  {
+    "source": "usb_c_pd_controller",
+    "target": "buck_converter_lpddr4_vddq",
+    "type": "power",
+    "sourcePin": "GND",
+    "targetPin": "GND"
+  },
+  {
+    "source": "usb_c_pd_controller",
+    "target": "ldo_lpddr4_vpp",
+    "type": "power",
+    "sourcePin": "GND",
+    "targetPin": "GND"
+  },
+  {
+    "source": "usb_c_pd_controller",
+    "target": "buck_converter_fpga_io",
+    "type": "power",
+    "sourcePin": "GND",
+    "targetPin": "GND"
+  },
+  {
+    "source": "usb_c_pd_controller",
+    "target": "buck_converter_aux_3v3",
+    "type": "power",
+    "sourcePin": "GND",
+    "targetPin": "GND"
+  },
+  {
+    "source": "buck_converter_aux_3v3",
+    "target": "jtag_header",
+    "type": "power",
+    "sourcePin": "GND",
+    "targetPin": "GND"
+  }
+]

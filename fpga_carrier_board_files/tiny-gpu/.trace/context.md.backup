@@ -1,0 +1,59 @@
+## 2025-01-01 — Tiny-GPU RISC-V FPGA Carrier Board — Session 1 (Schematic Foundation)
+
+### What was done
+- Created complete `tiny-gpu.kicad_sch` schematic for Artix-7 XC7A100T-2FGG484I carrier board
+- All custom lib_symbols defined inline: XC7A100T_FGG484, MT41K256M16TW, SII9022ACNU, TPS62130, AP2112K-3.3, AP2112K-1.2, W25Q128JVSIQ, USBC_CONN, JTAG_HEADER, HDMI_CONN, plus R/C/L/LED/PWR_FLAG/GND/VCC passives
+
+### Components placed
+- J1: USB4135-GF-A USB-C receptacle with R1/R2 (5.1kΩ CC pull-downs for 5V/3A sink)
+- U1: TPS62130 buck 5V→1.0V (VCCINT/VCCBRAM), L1=2.2uH, R3=191k/R4=82k FB divider
+- U2: TPS62130 buck 5V→1.8V (VCCAUX), L2=2.2uH, R5=510k/R6=100k FB divider
+- U3: TPS62130 buck 5V→1.35V (VCCO_DDR), L3=2.2uH, R7=350k/R8=100k FB divider
+- U4: AP2112K-3.3 LDO 5V→3.3V (3V3_IO / VCCO banks 14/15)
+- U15: AP2112K-1.2 LDO 1.8V→1.2V (VCC12 for SiI9022A core)
+- U_FPGA: XC7A100T-2FGG484I (FGG484 BGA) — all 128 DQ, 8 DQS pairs, 8 DM, CK pair, full address/cmd bus, JTAG, SPI config, HDMI video pins
+- U5: MT41K256M16TW byte lane 0 (DQ0-15, DQS0, DM0)
+- U6: MT41K256M16TW byte lane 1 (DQ16-31, DQS1, DM1)
+- U7: MT41K256M16TW byte lane 2 (DQ32-47, DQS2, DM2)
+- U8: MT41K256M16TW byte lane 3 (DQ48-63, DQS3, DM3)
+- U9: MT41K256M16TW byte lane 4 (DQ64-79, DQS4, DM4)
+- U10: MT41K256M16TW byte lane 5 (DQ80-95, DQS5, DM5)
+- U11: MT41K256M16TW byte lane 6 (DQ96-111, DQS6, DM6)
+- U12: MT41K256M16TW byte lane 7 (DQ112-127, DQS7, DM7)
+- U13: SII9022ACNU HDMI transmitter (QFN-72)
+- U14: W25Q128JVSIQ SPI Flash (SOIC-8)
+- J2: HDMI Type-A connector
+- J3: JTAG 2x7 header
+- R9/R10: 1k VREFDQ divider + C10=1uF filter
+- R11: 240Ω ZQ calibration resistor
+- R14/R15: 10k pull-ups for HDMI_RESET_N, FPGA_HDMI_INT_N
+- R16/R17: 4.7k DDC I2C pull-ups (SCL, SDA)
+- R18: 1k DONE LED resistor; D1: green LED
+- C1-C9: Bulk + decoupling on all power rails
+- C11-C18: 100nF per DDR3 chip (U5-U12)
+- C19/C20: 100nF decoupling on SiI9022A 3V3 and VCC12
+- C21: 100nF on SPI Flash VCC
+
+### Key design decisions
+- Power sequencing via PG chain: U1.PG→U2.EN, U2.PG→U3.EN, U3.PG→U4.EN (Xilinx UG472 compliant)
+- DDR3L VDD=VDDQ=VCCO_DDR=1.35V. ZQ=240Ω shared bus. VREFDQ=0.675V via 1k/1k divider
+- USB-C: fixed 5V/3A using CC resistors only, no PD controller
+- HDMI: SiI9022ACNU QFN-72. **Pin numbers are NEEDS_VERIFY** — QFN-72 pinout is image-only in datasheet. Verify against SiI9022A Programming Guide before fab.
+- SPI Flash: W25Q128JVSIQ SOIC-8. Master SPI config mode (M0/M1/M2=GND)
+- VCC12 (1.2V for SiI9022A) derived from VCCAUX (1.8V) via AP2112K-1.2 LDO
+- 128-bit DDR3L: 8 x MT41K256M16TW-107:P, each x16, one per byte lane
+- All DDR chips share common address/command/control bus (fly-by topology)
+
+### Outstanding / TODO
+- PCB layout not started — next step
+- SiI9022ACNU QFN-72 pin numbers need verification against physical datasheet before layout
+- Series termination resistors (33Ω) for DDR3 DQ/DQS/CK can be added as discrete Rs in layout
+- MGTAVCC/MGTAVTT/MGTVCCAUX — no GTX used, pins left unconnected (acceptable per UG472)
+
+## 2025-01-01 — Session 3 (Schematic Written to Disk)
+- Successfully wrote complete tiny-gpu.kicad_sch to project root
+- Verified U_FPGA and U12 present at lines 707 and 1096
+- File is ~1300 lines, fully self-contained with all lib_symbols inline
+- PWR_FLAG symbols on all 6 rails (VBUS_5V, VCCINT, VCCAUX, VCCO_DDR, 3V3_IO, GND)
+- All 8 DDR3 byte lanes fully wired (DQ0-127, DQS0-7 pairs, DM0-7)
+- HDMI signal chain: FPGA → SiI9022A → J2 connector (TMDS direct, no AC caps needed for SiI9022A output)

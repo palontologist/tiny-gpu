@@ -1,0 +1,132 @@
+[
+  {
+    "source": "pcb_standoff_corner_fl",
+    "target": "bottom_enclosure_half",
+    "label": "M3 screws"
+  },
+  {
+    "source": "pcb_standoff_corner_fr",
+    "target": "bottom_enclosure_half",
+    "label": "M3 screws"
+  },
+  {
+    "source": "pcb_standoff_corner_bl",
+    "target": "bottom_enclosure_half",
+    "label": "M3 screws"
+  },
+  {
+    "source": "pcb_standoff_corner_br",
+    "target": "bottom_enclosure_half",
+    "label": "M3 screws"
+  },
+  {
+    "source": "bottom_enclosure_half",
+    "target": "top_enclosure_half",
+    "label": "enclosure_assembly_screws"
+  },
+  {
+    "source": "lpddr4_chip_0_mount",
+    "target": "bottom_enclosure_half",
+    "label": "M2 screws"
+  },
+  {
+    "source": "lpddr4_chip_1_mount",
+    "target": "bottom_enclosure_half",
+    "label": "M2 screws"
+  },
+  {
+    "source": "lpddr4_chip_2_mount",
+    "target": "bottom_enclosure_half",
+    "label": "M2 screws"
+  },
+  {
+    "source": "lpddr4_chip_3_mount",
+    "target": "bottom_enclosure_half",
+    "label": "M2 screws"
+  },
+  {
+    "source": "hdmi_transmitter_mount",
+    "target": "bottom_enclosure_half",
+    "label": "M2 screws"
+  },
+  {
+    "source": "usb_c_pd_controller_mount",
+    "target": "bottom_enclosure_half",
+    "label": "M2 screws"
+  },
+  {
+    "source": "usb_c_receptacle_mount",
+    "target": "bottom_enclosure_half",
+    "label": "M2 screws"
+  },
+  {
+    "source": "hdmi_type_a_receptacle_mount",
+    "target": "bottom_enclosure_half",
+    "label": "M2 screws"
+  },
+  {
+    "source": "jtag_header_mount",
+    "target": "bottom_enclosure_half",
+    "label": "M2 screws"
+  },
+  {
+    "source": "spi_nor_flash_mount",
+    "target": "bottom_enclosure_half",
+    "label": "M2 screws"
+  },
+  {
+    "source": "heat_sink_fpga",
+    "target": "fpga_ecp5",
+    "label": "mount"
+  },
+  {
+    "source": "lpddr4_chip_0_mount",
+    "target": "lpddr4_chip_0",
+    "label": "mount"
+  },
+  {
+    "source": "lpddr4_chip_1_mount",
+    "target": "lpddr4_chip_1",
+    "label": "mount"
+  },
+  {
+    "source": "lpddr4_chip_2_mount",
+    "target": "lpddr4_chip_2",
+    "label": "mount"
+  },
+  {
+    "source": "lpddr4_chip_3_mount",
+    "target": "lpddr4_chip_3",
+    "label": "mount"
+  },
+  {
+    "source": "hdmi_transmitter_mount",
+    "target": "hdmi_transmitter",
+    "label": "mount"
+  },
+  {
+    "source": "usb_c_pd_controller_mount",
+    "target": "usb_c_pd_controller",
+    "label": "mount"
+  },
+  {
+    "source": "usb_c_receptacle_mount",
+    "target": "usb_c_receptacle",
+    "label": "mount"
+  },
+  {
+    "source": "hdmi_type_a_receptacle_mount",
+    "target": "hdmi_type_a_receptacle",
+    "label": "mount"
+  },
+  {
+    "source": "jtag_header_mount",
+    "target": "jtag_header",
+    "label": "mount"
+  },
+  {
+    "source": "spi_nor_flash_mount",
+    "target": "spi_nor_flash",
+    "label": "mount"
+  }
+]
