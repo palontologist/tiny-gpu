@@ -88,18 +88,47 @@ Drawing from the Libre-SOC / Simple-V paradigm:
 
 ---
 
-## 5. Toolchain & Ecosystem Advantages
+## 5. Modular Extensibility & External GPU (eGPU) Integration
+
+One of the most compelling advantages of the RVV VLA (Vector-Length Agnostic) paradigm is **seamless external accelerator scaling** (e.g., modular laptops docking into external compute/GPU modules):
+
+```
++------------------------------------+          +------------------------------------+
+|       Host Laptop / SoC            |          |     External Compute / eGPU        |
+|  - RV64 Host Cores                 |  CXL /   |  - High-Density RVV Vector Tiles   |
+|  - Integrated Low-Power RVV Core   | USB4/PCIe|  - Ultra-wide VLEN (1024-4096 bit) |
+|    (VLEN = 128 / 256 bits)         |<========>|  - Shared NUMA Memory Pool         |
+|  - Unified Virtual Memory (UVM)    |          |  - Zero-Copy Coherent Execution    |
++------------------------------------+          +------------------------------------+
+```
+
+### 5.1 Binary Portability Without Recompilation
+- In proprietary GPU ecosystems (CUDA/proprietary ISAs), offloading to an eGPU requires separate driver stacks, runtime kernel compilation (JIT/PTX), and distinct target binaries.
+- Under RVV VLA, the exact same binary executable that runs on a laptop's on-die 128-bit RVV core will automatically exploit an external accelerator's 2048-bit or 4096-bit vector lanes when offloaded, with zero re-compilation.
+
+### 5.2 Coherent Memory Fabric (CXL.mem / CXL.cache & USB4/PCIe)
+- **Zero-Copy Architecture:** Using standard coherent protocols (such as CXL or open TileLink/CCIX-over-PCIe), external GPU modules appear as coherent NUMA nodes.
+- **Eliminating PCIe Transfer Bottlenecks:** Replaces explicit host-to-device memory copies (`cudaMemcpy` / staging buffers) with hardware-managed cache coherence and unified virtual addressing.
+
+### 5.3 Hot-Pluggable Workload Migration
+- When on battery, the laptop executes lightweight vector operations locally on its low-power integrated RVV units.
+- Upon docking to an external GPU/accelerator module, the OS thread/task scheduler dynamically migrates high-intensity compute tiles to the external high-throughput RVV hardware units seamlessly.
+
+---
+
+## 6. Toolchain & Ecosystem Advantages
 
 | Aspect | Approach B (Standard RVV) | Traditional Custom SIMT (Vortex / Custom ISAs) |
 | :--- | :--- | :--- |
 | **Compiler Support** | Native upstream LLVM & GCC | Custom compiler forks & proprietary backend targets |
 | **Binary Portability** | Universal across any RVV-compliant processor | Bound to specific warp size and custom instruction sets |
+| **Extensibility (eGPU)** | Automatic scaling across VLEN widths (128b to 4096b+) | Requires discrete driver layers & kernel re-targeting |
 | **Ecosystem Risk** | Low (backed by RISC-V International standards) | High (dependent on bespoke hardware maintenance) |
 | **Graphics Toolchains** | Compiles via SPIR-V to LLVM RVV backends (e.g., Mesa / LLVMpipe / Vulkan drivers) | Requires specialized shader compiler translation passes |
 
 ---
 
-## 6. Implementation Roadmap for Tiny-GPU
+## 7. Implementation Roadmap for Tiny-GPU
 
 1. **Phase 1: RVV Sub-extension Specification**
    - Select baseline: `RV32IMCV` or `RV64GCV` targeting $VLEN=128$ or $256$ bits for initial FPGA synthesis.
@@ -112,3 +141,7 @@ Drawing from the Libre-SOC / Simple-V paradigm:
 3. **Phase 3: Compute & Graphics Kernel Benchmarking**
    - Port basic linear algebra subprograms (BLAS) and software rasterizer fragment kernels to RVV assembly.
    - Verify execution correctness against RISC-V architectural simulators (Spike / QEMU).
+
+4. **Phase 4: Coherent Interconnect & Modular Offload**
+   - Define external accelerator interface using standard AXI4/TileLink/PCIe endpoints.
+   - Prototype dynamic workload offloading between low-power local VPU lanes and high-throughput external vector tiles.
