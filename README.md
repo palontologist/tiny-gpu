@@ -29,6 +29,7 @@ Built with ~20 files of fully documented Verilog, the project evolves through 7 
 - [Optimizations](#optimizations)
   - [Implemented](#implemented-optimizations)
   - [Future](#future-optimizations)
+- [Unified CPU/GPU Architecture (Approach B: RVV) & Modular Extensibility](#unified-cpugpu-architecture-approach-b-rvv--modular-extensibility)
 - [Next Steps](#next-steps)
 
 # Overview
@@ -60,10 +61,7 @@ The project explores four primary domains:
 
 # Architecture
 
-<p float="left">
-  <img src="/docs/images/gpu.png" alt="GPU" width="48%">
-  <img src="/docs/images/core.png" alt="Core" width="48%">
-</p>
+![Architecture](/docs/images/architecture.png)
 
 ## GPU
 
@@ -196,97 +194,102 @@ Full support for standard RISC-V integer (`I`) and multiply/divide (`M`) instruc
 
 | Opcode | Name | Description |
 |--------|------|-------------|
-| `CUSTOM0` | `RET` | Thread retirement |
-| `CUSTOM1` | `DP4A` / `FP32` | Scalar INT4 dot-product or FP32 ops |
-| `CUSTOM2` | Vector SIMD | 128-bit packed vector operations |
-
-### Scalar Custom Operations (CUSTOM1)
-- `000`: `DP4A` (Signed INT4 dot-product accumulate)
-- `001`: `DP4A.U` (Unsigned INT4 dot-product accumulate)
-- `010`: `FP.ADD` (FP32 add stub)
-- `011`: `FP.MUL` (FP32 multiply stub)
-
-### Vector Operations (CUSTOM2)
-- `000`: `VADD.I8` (16 × INT8 packed add)
-- `001`: `VMUL.I8` (16 × INT8 packed multiply-low)
-- `010`: `VMADD.I8` (16 × INT8 multiply-accumulate)
-- `011`: `VDP4A.I4` (4 × 8 × INT4 signed DP4A)
-- `100`: `VADD.F32` (4 × FP32 add stub)
-- `101`: `VMUL.F32` (4 × FP32 multiply stub)
-- `110`: `VMADD.F32` (4 × FP32 FMA stub)
-- `111`: `VPREFETCH` (Prefetch hint)
+| `CUSTOM0` | `RET` | Return from kernel execution |
+| `CUSTOM1` | `DP4A` | INT4 4-element dot product with 32-bit accumulation |
+| `CUSTOM1` | `FADD` / `FMUL` / `FFMA` | Single-precision floating point arithmetic stubs |
+| `CUSTOM2` | `VADD` / `VMUL` / `VMAC` | 128-bit packed INT8 vector operations |
+| `CUSTOM2` | `VDP4A` | 128-bit packed INT4 dot product accumulate |
+| `CUSTOM2` | `VLW.Q` / `VSW.Q` | 128-bit vector quad-word memory load/store |
 
 ## Register File
-- **Scalar (32 × 32-bit):** x0 (zero), x13-x15 (special registers), others general purpose.
-- **Vector (16 × 128-bit):** v0 (zero), v13-v15 (broadcast special registers), others general purpose.
+
+- **Scalar Registers:** 32 registers (`x0` through `x31`).
+  - `x0`: Constant 0
+  - `x13`: Read-only `%blockIdx`
+  - `x14`: Read-only `%blockDim`
+  - `x15`: Read-only `%threadIdx`
+- **Vector Registers:** 16 registers (`v0` through `v15`), each 128 bits wide.
 
 # Execution
 
-### Pipeline Stages
-Each core utilizes a 7-stage pipeline:
-1. `IDLE` $\rightarrow$ 2. `FETCH` $\rightarrow$ 3. `DECODE` $\rightarrow$ 4. `REQUEST` $\rightarrow$ 5. `WAIT` $\rightarrow$ 6. `EXECUTE` $\rightarrow$ 7. `UPDATE`
+## Pipeline Stages
 
-### Out-of-Order Execution (Phase 4)
-A Tomasulo-style ROB enables load-latency hiding:
-- **In-order allocation/commit, out-of-order writeback.**
-- **Hazard detection** and **result forwarding** to minimize pipeline stalls.
+The execution pipeline consists of 7 stages:
+1. **FETCH:** Retrieve instruction from program memory.
+2. **DECODE:** Decode instruction and identify operand registers.
+3. **REQUEST:** Issue memory requests or check for ROB hazards.
+4. **WAIT:** Wait for memory data or hazard clearance.
+5. **EXECUTE:** Compute ALU / Vector / Branch results (or perform zero-skip).
+6. **UPDATE:** Update PC, write back results to register file or ROB.
+7. **COMMIT:** In-order commit from ROB to architectural state.
 
-### Sparsity-Aware Execution (Phase 3)
-For sparse ML tensors, the scheduler detects zero-valued operands and skips the EXECUTE stage, reducing power and increasing throughput.
+## Out-of-Order Execution
+Supported via Tomasulo-style Reorder Buffer (ROB) tracking in-flight instructions, resolving RAW hazards, and enabling speculative result forwarding.
 
-### Thread
-Each thread maintains its own state (PC, registers, L1 cache) while operating within a SIMD block, ensuring parallel execution of the same instruction across multiple data points.
+## Sparsity-Aware Execution
+Skips the execute stage when operands are detected as zero, directly writing zero to destination registers and cutting dynamic power consumption.
+
+## Thread
+Threads execute in SIMD blocks where each lane shares instruction flow but maintains private register and cache state.
 
 # Kernels
-The project includes verified kernels demonstrating SIMD programming and execution:
 
 ### Matrix Addition (RV32I)
-Demonstrates basic RV32I load/store and the `%blockIdx / %blockDim / %threadIdx` SIMD pattern.
+Demonstrates standard RISC-V scalar instructions distributed across threads to compute element-wise addition over matrix buffers.
 
 ### Matrix Multiplication (RV32IM)
-Demonstrates `mul`, `div`, and `blt` branching for accumulated dot-products.
+Leverages RV32M hardware multiplier extensions for high-throughput tile-based matrix multiplication.
 
-### Vector DP4A (Phase 7 — CUSTOM2)
-Demonstrates 128-bit vector SIMD using the `VDP4A.I4` instruction for high-throughput INT4 dot-products.
+### Vector DP4A (Phase 7 / CUSTOM2)
+Utilizes 128-bit vector units to compute quantized INT4 dot products with 32-bit accumulation for neural network linear layers.
 
 # Simulation
 
-`tiny-gpu` is simulated using a modern verification stack.
-
 ### Prerequisites
-**Option A: Nix (Recommended)**
-```bash
-nix-shell -p iverilog python3 python3Packages.cocotb gnumake
-# sv2v must be installed separately
-```
+- `iverilog` (Icarus Verilog)
+- Python 3 & `cocotb`
+- `gnumake`
 
-**Option B: Manual installation**
-- Icarus Verilog (`apt install iverilog`)
-- sv2v (from GitHub releases)
-- cocotb (`pip3 install cocotb`)
+```bash
+# Using Nix
+nix-shell -p iverilog python3 python3Packages.cocotb gnumake
+```
 
 ### Run Tests
 ```bash
 make test_matadd    # Scalar matrix addition
-make test_matmul    #L Scalar matrix multiplication + vector DP4A
+make test_matmul    # Scalar matrix multiplication + vector DP4A
 ```
 
 # Optimizations
 
-## Implemented
-- **L1 Data Cache (Phase 5):** 2-way set-associative, write-through policy.
-- **Out-of-Order ROB (Phase 4):** Tomasulo-style hazard management.
-- **Sparsity-Aware Execution (Phase 3):** Zero-detection for power saving.
-- **Vector SIMD (Phase 7):** 128-bit packed operations (INT8/INT4).
-- **Graphics Pipeline (Phase 6):** Rasterizer and texture unit for educational use.
+### Implemented Optimizations
+- **INT4 Quantization:** Efficient ML inference with reduced precision.
+- **Sparsity-Aware Skip:** Dynamic power optimization for zero operands.
+- **Tomasulo ROB:** Dynamic out-of-order execution with result forwarding.
+- **Per-Thread L1 Cache:** Mitigates global memory latency.
+- **Vector SIMD:** 128-bit data bus with packed INT8/INT4 and FP32 stubs.
 
-## Future Work
-- **Multi-level Cache:** Implement a shared L2 cache.
-- **Memory Coalescing:** Combine adjacent thread requests into single transactions.
+### Future Optimizations
 - **Warp Scheduling:** Implement multi-warp concurrency per core.
 - **Branch Divergence:** Handle divergent execution paths.
 - **FP32 Silicon:** Replace stubs with IEEE-754 compliant FP IP.
 - **Physical Bring-up:** Finalize fabrication and test the `tiny-gpu` on the custom Artix-7 carrier board.
+
+# Unified CPU/GPU Architecture (Approach B: RVV) & Modular Extensibility
+
+As `tiny-gpu` evolves, the architectural roadmap moves toward a **Unified RISC-V CPU/GPU Architecture** based on the standard **RISC-V Vector Extension (RVV 1.0)** and **Simple-V** dynamic vectorization.
+
+### Why Unified RVV (Approach B)?
+- **Vector-Length Agnostic (VLA):** Binary executables automatically scale across hardware vector widths ($VLEN$) without recompilation.
+- **Standard Toolchains:** Upstream LLVM and GCC support, eliminating proprietary SIMT compiler forks.
+- **Vulkan / SPIR-V Support:** Seamless translation of graphics shaders directly into standard vector instructions.
+
+### Modular Extensibility & eGPU Scaling
+- **Seamless Laptop-to-eGPU Offloading:** Identical binaries run locally on a low-power laptop core ($VLEN=128\text{b}$) and scale effortlessly to an external accelerator ($VLEN=2048\text{b}\text{ to }4096\text{b}$).
+- **Coherent Interconnects:** Interfacing over CXL.mem/CXL.cache or TileLink/PCIe eliminates explicit PCIe data copies (`cudaMemcpy`) in favor of unified virtual memory.
+
+📖 **Detailed Architectural Specification:** For the complete design document, pipeline diagrams, and roadmap, see [`docs/unified-cpu-gpu-rvv.md`](docs/unified-cpu-gpu-rvv.md).
 
 ## Next Steps
 Contributors are welcome to help with the TODO list or submit PRs for new optimizations!
