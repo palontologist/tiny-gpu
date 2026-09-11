@@ -1,4 +1,4 @@
-# RV32IM + Custom Extension Instruction Encoders
+# RV32IM + Custom Extension + Standard RVV 1.0 Instruction Encoders
 # Shared helpers for encoding 32-bit RISC-V instructions used by tiny-gpu tests.
 
 
@@ -268,6 +268,7 @@ def rv32_and(rd, rs1, rs2):
     return _rv32_rtype(rs1, rs2, 0b111, 0b0000000, rd)
 
 
+# ---- RV32M Multiply/Divide Extensions ----
 def rv32_mul(rd, rs1, rs2):
     """MUL: rd = rs1 * rs2 (lower 32 bits)"""
     return _rv32_rtype(rs1, rs2, 0b000, 0b0000001, rd)
@@ -321,8 +322,6 @@ def _rv32_rtype(rs1, rs2, funct3, funct7, rd):
 
 
 # ---- Custom GPU extensions ----
-
-
 def rv32_ret():
     """CUSTOM0: thread retirement"""
     return 0b0001011
@@ -372,6 +371,113 @@ VALU_VADD_F32 = 0b100
 VALU_VMUL_F32 = 0b101
 VALU_VMADD_F32 = 0b110
 VALU_VPREFETCH = 0b111
+
+
+# ---- Standard RISC-V Vector Extension (RVV 1.0 / OP-V: 0b1010111) ----
+OPCODE_OP_V = 0b1010111
+OPCODE_LOAD_FP = 0b0000111
+OPCODE_STORE_FP = 0b0100111
+
+
+def rv32_vsetvli(rd, rs1, vtypei):
+    """vsetvli rd, rs1, vtypei (Standard RVV 1.0 configuration instruction)"""
+    return (
+        ((vtypei & 0x7FF) << 20)
+        | ((rs1 & 0x1F) << 15)
+        | (0b111 << 12)
+        | ((rd & 0x1F) << 7)
+        | OPCODE_OP_V
+    )
+
+
+def rv32_vsetivli(rd, uimm, vtypei):
+    """vsetivli rd, uimm, vtypei"""
+    return (
+        (0b11 << 30)
+        | ((vtypei & 0x3FF) << 20)
+        | ((uimm & 0x1F) << 15)
+        | (0b111 << 12)
+        | ((rd & 0x1F) << 7)
+        | OPCODE_OP_V
+    )
+
+
+def rv32_vsetvl(rd, rs1, rs2):
+    """vsetvl rd, rs1, rs2"""
+    return (
+        (0b1000000 << 25)
+        | ((rs2 & 0x1F) << 20)
+        | ((rs1 & 0x1F) << 15)
+        | (0b111 << 12)
+        | ((rd & 0x1F) << 7)
+        | OPCODE_OP_V
+    )
+
+
+def rv32_vadd_vv(vd, vs2, vs1, vm=1):
+    """vadd.vv vd, vs2, vs1, vm (funct6=000000, OPIVV funct3=000)"""
+    return (
+        (0b000000 << 26)
+        | ((vm & 1) << 25)
+        | ((vs2 & 0x1F) << 20)
+        | ((vs1 & 0x1F) << 15)
+        | (0b000 << 12)
+        | ((vd & 0x1F) << 7)
+        | OPCODE_OP_V
+    )
+
+
+def rv32_vsub_vv(vd, vs2, vs1, vm=1):
+    """vsub.vv vd, vs2, vs1, vm (funct6=000010, OPIVV funct3=000)"""
+    return (
+        (0b000010 << 26)
+        | ((vm & 1) << 25)
+        | ((vs2 & 0x1F) << 20)
+        | ((vs1 & 0x1F) << 15)
+        | (0b000 << 12)
+        | ((vd & 0x1F) << 7)
+        | OPCODE_OP_V
+    )
+
+
+def rv32_vmul_vv(vd, vs2, vs1, vm=1):
+    """vmul.vv vd, vs2, vs1, vm (funct6=100101, OPIVV funct3=000)"""
+    return (
+        (0b100101 << 26)
+        | ((vm & 1) << 25)
+        | ((vs2 & 0x1F) << 20)
+        | ((vs1 & 0x1F) << 15)
+        | (0b000 << 12)
+        | ((vd & 0x1F) << 7)
+        | OPCODE_OP_V
+    )
+
+
+def rv32_vle32_v(vd, rs1, vm=1):
+    """vle32.v vd, (rs1), vm (unit-stride 32-bit load, width=110, mew=0)"""
+    return (
+        (0b000000 << 26)
+        | ((vm & 1) << 25)
+        | (0b00000 << 20)
+        | ((rs1 & 0x1F) << 15)
+        | (0b110 << 12)
+        | ((vd & 0x1F) << 7)
+        | OPCODE_LOAD_FP
+    )
+
+
+def rv32_vse32_v(vs3, rs1, vm=1):
+    """vse32.v vs3, (rs1), vm (unit-stride 32-bit store, width=110, mew=0)"""
+    return (
+        (0b000000 << 26)
+        | ((vm & 1) << 25)
+        | (0b00000 << 20)
+        | ((rs1 & 0x1F) << 15)
+        | (0b110 << 12)
+        | ((vs3 & 0x1F) << 7)
+        | OPCODE_STORE_FP
+    )
+
 
 # ---- Convenience aliases for GPU special registers ----
 # In tiny-gpu, x13=%blockIdx, x14=%blockDim, x15=%threadIdx
