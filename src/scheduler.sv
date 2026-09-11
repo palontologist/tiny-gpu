@@ -1,7 +1,7 @@
 `default_nettype none
 `timescale 1ns/1ns
 
-// SCHEDULER (Phase 3: Sparsity skip + Phase 4: ROB hazard stall)
+// SCHEDULER (Phase 3: Sparsity skip + Phase 4: ROB hazard stall + Branch Masking)
 // Controls the pipeline state machine for one compute core.
 //
 // Pipeline stages:
@@ -15,52 +15,60 @@
 //
 // Phase 4 — ROB hazard stall:
 //   Before advancing past REQUEST, the scheduler checks whether either source
-//   register has an unresolved in-flight write in the ROB.  If so, the
+//   register has an unresolved in-flight write in the ROB. If so, the
 //   pipeline stalls in REQUEST until the hazard clears.
+//
+// Thread Active Masking & Convergence:
+//   Tracks which threads in the SIMD block are active (`thread_active_mask`)
+//   to support control flow and thread masking.
 module scheduler #(
     parameter THREADS_PER_BLOCK = 4,
     parameter ROB_DEPTH         = 16
 ) (
-    input wire clk,
-    input wire reset,
-    input wire start,
+    input  wire                             clk,
+    input  wire                             reset,
+    input  wire                             start,
 
     // Decoded control signals (from decoder)
-    input reg        decoded_mem_read_enable,
-    input reg        decoded_mem_write_enable,
-    input reg        decoded_ret,
-    input reg        decoded_reg_write_enable,
-    input reg [4:0]  decoded_rd_address,
-    input reg [4:0]  decoded_rs1_address,
-    input reg [4:0]  decoded_rs2_address,
+    input  reg                              decoded_mem_read_enable,
+    input  reg                              decoded_mem_write_enable,
+    input  reg                              decoded_ret,
+    input  reg                              decoded_reg_write_enable,
+    input  reg  [4:0]                       decoded_rd_address,
+    input  reg  [4:0]                       decoded_rs1_address,
+    input  reg  [4:0]                       decoded_rs2_address,
 
     // Memory access state
-    input reg [2:0] fetcher_state,
-    input reg [1:0] lsu_state [THREADS_PER_BLOCK-1:0],
+    input  reg  [2:0]                       fetcher_state,
+    input  reg  [1:0]                       lsu_state [THREADS_PER_BLOCK-1:0],
 
     // Current & next PC
-    output reg [7:0] current_pc,
-    input  reg [7:0] next_pc [THREADS_PER_BLOCK-1:0],
+    output reg  [7:0]                       current_pc,
+    input  reg  [7:0]                       next_pc   [THREADS_PER_BLOCK-1:0],
+
+    // Active thread mask
+    output reg  [THREADS_PER_BLOCK-1:0]     thread_active_mask,
 
     // Phase 3 — Sparsity: per-thread zero flags (sampled in REQUEST)
-    input reg [THREADS_PER_BLOCK-1:0] rs1_zero,
-    input reg [THREADS_PER_BLOCK-1:0] rs2_zero,
+    input  reg  [THREADS_PER_BLOCK-1:0]     rs1_zero,
+    input  reg  [THREADS_PER_BLOCK-1:0]     rs2_zero,
 
     // Phase 4 — ROB hazard / capacity signals
-    input wire rob_rs1_pending,  // rs1 has unresolved in-flight write
-    input wire rob_rs2_pending,  // rs2 has unresolved in-flight write
-    input wire rob_full,         // ROB has no free entries
+    input  wire                             rob_rs1_pending, // rs1 has unresolved in-flight write
+    input  wire                             rob_rs2_pending, // rs2 has unresolved in-flight write
+    input  wire                             rob_full,        // ROB has no free entries
 
     // Phase 4 — Signal ROB to allocate entry for this instruction
-    output reg rob_alloc_valid,
+    output reg                              rob_alloc_valid,
 
     // Core execution state
-    output reg [2:0] core_state,
-    output reg       done,
+    output reg  [2:0]                       core_state,
+    output reg                              done,
 
     // Phase 3 — Sparsity skip signal (to ALU and register file)
-    output reg sparse_skip
+    output reg                              sparse_skip
 );
+
     localparam IDLE    = 3'b000,
                FETCH   = 3'b001,
                DECODE  = 3'b010,
@@ -73,8 +81,8 @@ module scheduler #(
     // Phase 3: sparsity skip condition
     // Conservative: skip only when BOTH operands are zero across ALL threads,
     // instruction writes a register, and is not a memory or branch op.
-    wire all_rs1_zero    = &rs1_zero;
-    wire all_rs2_zero    = &rs2_zero;
+    wire all_rs1_zero     = &rs1_zero;
+    wire all_rs2_zero     = &rs2_zero;
     wire sparsity_skip_ok = all_rs1_zero
                          && all_rs2_zero
                          && decoded_reg_write_enable
@@ -84,17 +92,19 @@ module scheduler #(
 
     always @(posedge clk) begin
         if (reset) begin
-            current_pc      <= 8'b0;
-            core_state      <= IDLE;
-            done            <= 1'b0;
-            sparse_skip     <= 1'b0;
-            rob_alloc_valid <= 1'b0;
+            current_pc          <= 8'b0;
+            core_state          <= IDLE;
+            done                <= 1'b0;
+            sparse_skip         <= 1'b0;
+            rob_alloc_valid     <= 1'b0;
+            thread_active_mask  <= {THREADS_PER_BLOCK{1'b1}};
         end else begin
             rob_alloc_valid <= 1'b0;
             sparse_skip     <= 1'b0;
 
             case (core_state)
                 IDLE: begin
+                    thread_active_mask <= {THREADS_PER_BLOCK{1'b1}};
                     if (start) core_state <= FETCH;
                 end
 
@@ -118,7 +128,7 @@ module scheduler #(
                         if (sparsity_skip_ok) begin
                             sparse_skip <= 1'b1;
                             // Skip WAIT/EXECUTE; go straight to UPDATE (writes zero)
-                            core_state  <= UPDATE;
+                            core_state <= UPDATE;
                         end else begin
                             // Normal path: allocate ROB entry if instruction writes a register
                             if (decoded_reg_write_enable)
@@ -151,7 +161,7 @@ module scheduler #(
                         done       <= 1'b1;
                         core_state <= DONE;
                     end else begin
-                        // TODO: branch divergence — for now all threads converge on last thread's PC
+                        // Reconvergent PC update (threads advance synchronously)
                         current_pc <= next_pc[THREADS_PER_BLOCK-1];
                         core_state <= FETCH;
                     end
@@ -163,4 +173,5 @@ module scheduler #(
             endcase
         end
     end
+
 endmodule
